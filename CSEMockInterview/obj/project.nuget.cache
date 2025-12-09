@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "8eFDtDnvjhc=",
+  "dgSpecHash": "b2Fq8DU3nIE=",
   "success": true,
   "projectFilePath": "C:\\Users\\ASGAD\\source\\repos\\CSEMockInterview\\CSEMockInterview\\CSEMockInterview.csproj",
   "expectedPackageFiles": [
@@ -25,6 +25,7 @@
     "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\9.0.11\\microsoft.entityframeworkcore.analyzers.9.0.11.nupkg.sha512",
     "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.entityframeworkcore.design\\9.0.11\\microsoft.entityframeworkcore.design.9.0.11.nupkg.sha512",
     "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\9.0.11\\microsoft.entityframeworkcore.relational.9.0.11.nupkg.sha512",
+    "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\9.0.11\\microsoft.entityframeworkcore.tools.9.0.11.nupkg.sha512",
     "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.extensions.caching.abstractions\\9.0.11\\microsoft.extensions.caching.abstractions.9.0.11.nupkg.sha512",
     "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.extensions.caching.memory\\9.0.11\\microsoft.extensions.caching.memory.9.0.11.nupkg.sha512",
     "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.extensions.configuration\\1.1.2\\microsoft.extensions.configuration.1.1.2.nupkg.sha512",
