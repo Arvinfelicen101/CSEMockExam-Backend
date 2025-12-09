@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "nSY5dKkUL14=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\ASGAD\\source\\repos\\CSEMockInterview\\CSEMockInterview\\CSEMockInterview.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.11\\microsoft.aspnetcore.openapi.9.0.11.nupkg.sha512",
+    "C:\\Users\\ASGAD\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
