@@ -27,7 +27,7 @@ public partial class MyDbContext : IdentityDbContext<Users, IdentityRole, string
     {
         base.OnModelCreating(modelBuilder);
 
-        Seeders.Seeders.DataSeeder(modelBuilder);
+        //Seeders.Seeders.DataSeeder(modelBuilder);
     }
 
   

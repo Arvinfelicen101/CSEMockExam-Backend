@@ -46,6 +46,10 @@ namespace CSEMockInterview.Services.Authentication
                         StatusCode = 200,
                         message = "Welcome User",
                         data = new TokenDTO()
+                        {
+                            AccessToken = token.AccessToken,
+                            RefreshToken = token.RefreshToken
+                        }
                     };
 
                     return ApiResponse;
@@ -90,14 +94,14 @@ namespace CSEMockInterview.Services.Authentication
             .Concat(userRoles.Select(role => new Claim(ClaimTypes.Role, role)))
             .ToList();
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]!));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JwtConfig:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-          issuer: config["Jwt:Issuer"],
-          audience: config["Jwt:Audience"],
+          issuer: config["JwtConfig:Issuer"],
+          audience: config["JwtConfig:Audience"],
           claims: claims,
-          expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(config["Jwt:ExpireMinutes"])),
+          expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(config["JwtConfig:ExpireMinutes"])),
           signingCredentials: creds
       );
 
