@@ -7,10 +7,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Scalar.AspNetCore;
+using CSEMockInterview.Repository.Auth;
+using CSEMockInterview.Services.Authentication;
+using CSEMockInterview.Repository;
+using CSEMockInterview.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
+
+//DI Repositories
+builder.Services.AddScoped<AuthRepository>();
+builder.Services.AddScoped<UserManagementRepository>();
+
+//DI Services
+builder.Services.AddScoped<AuthServices>();
+builder.Services.AddScoped<UsermanagementServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
