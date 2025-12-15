@@ -2,6 +2,7 @@
 using CSEMockInterview.Repository;
 using CSEMockInterview.Services;
 using CSEMockInterview.Services.Authentication;
+using CSEMockInterview.Services.UserManagement;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,9 +13,9 @@ namespace CSEMockInterview.Controllers
     public class HomePageController : ControllerBase
     {
         private readonly AuthServices _service;
-        private readonly UsermanagementServices _userManagement;
+        private readonly IUserManagementServices _userManagement;
 
-        public HomePageController(AuthServices service, UsermanagementServices userManagement)
+        public HomePageController(AuthServices service, UserManagementServices userManagement)
         {
             _service = service;
             _userManagement = userManagement;
@@ -30,7 +31,7 @@ namespace CSEMockInterview.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO user)
         {
-            var result = await _userManagement.UserInfo(user);
+            var result = await _userManagement.CreateUserService(user);
             return StatusCode(result.StatusCode, result);
         }
 

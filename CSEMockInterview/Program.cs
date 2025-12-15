@@ -10,7 +10,9 @@ using Scalar.AspNetCore;
 using CSEMockInterview.Repository.Auth;
 using CSEMockInterview.Services.Authentication;
 using CSEMockInterview.Repository;
+using CSEMockInterview.Repository.UserManagement;
 using CSEMockInterview.Services;
+using CSEMockInterview.Services.UserManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 //DI Repositories
 builder.Services.AddScoped<AuthRepository>();
-builder.Services.AddScoped<UserManagementRepository>();
+builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 
 //DI Services
 builder.Services.AddScoped<AuthServices>();
-builder.Services.AddScoped<UsermanagementServices>();
+builder.Services.AddScoped<IUserManagementServices, UserManagementServices>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
