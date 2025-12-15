@@ -38,4 +38,29 @@ public class UserManagementServicesTest
         repoMock.Verify(r => r.CreateUserAsync(It.IsAny<Users>(), It.IsAny<string>()), Times.Never);
     }
 
+    public async Task CreateUserService_UserCreated_Success()
+    {
+        //arrange
+        var repoMock = new Mock<IUserManagementRepository>();
+        var service = new UserManagementServices(repoMock.Object);
+        
+        var user = new RegisterDTO()
+        {
+            username = "francis123",
+            firstName = "Francis",
+            middleName = "Pajarit",
+            lastName = "Flores",
+            password = "Francis123!",
+            confirmPassword = "Francis123!"
+        };
+        
+        //act 
+        var result = await service.CreateUserService(user);
+        
+        //assert
+        Assert.Equal(200, result.StatusCode);
+
+    }
+    
+
 }
