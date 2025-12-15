@@ -3,6 +3,10 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+obj/
+bin/
+out/
+
 # Visual Studio cache/options
 .vs/
 *.user
