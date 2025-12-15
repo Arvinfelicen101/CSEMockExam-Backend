@@ -1,25 +1,20 @@
 ﻿using CSEMockInterview.DTOs;
 using CSEMockInterview.DTOs.Auth;
 using CSEMockInterview.Models;
-using CSEMockInterview.Repository;
-using Microsoft.AspNetCore.Identity;
+using CSEMockInterview.Repository.UserManagement;
 
-namespace CSEMockInterview.Services
+namespace CSEMockInterview.Services.UserManagement
 {
-    public class UsermanagementServices
+    public class UserManagementServices : IUserManagementServices
     {
-        private readonly UserManagementRepository _repository;
-        private readonly UserManager<Users> _manager;
-        private readonly IConfiguration _config;
-
-        public UsermanagementServices(UserManagementRepository repository, UserManager<Users> manager, IConfiguration config)
+        private readonly IUserManagementRepository _repository;
+        
+        public UserManagementServices(IUserManagementRepository repository)
         {
             _repository = repository;
-            _manager = manager;
-            _config = config;
         }
 
-        public async Task<APIResponseDTO<String>> UserInfo(RegisterDTO user)
+        public async Task<APIResponseDTO<String>> CreateUserService(RegisterDTO user)
         {
             try
             {
@@ -32,9 +27,7 @@ namespace CSEMockInterview.Services
                     LastName = user.lastName,
 
                 };
-
                 var identityResult = await _repository.CreateUserAsync(userInfo, user.password);
-
                 if (!identityResult.Succeeded)
                 {
                     return new APIResponseDTO<string>
@@ -45,7 +38,6 @@ namespace CSEMockInterview.Services
                         Errors = identityResult.Errors.Select(e => e.Description).ToList()
                     };
                 }
-
                 return new APIResponseDTO<string>
                 {
                     success = true,
