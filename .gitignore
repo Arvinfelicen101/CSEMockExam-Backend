@@ -3,6 +3,11 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Visual Studio cache/options
+.vs/
+*.user
+*.suo
+
 # dotenv files
 .env
 
@@ -482,3 +487,11 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Backup & temp
+*.tmp
+*.bak
+*.swp
+
+wwwroot/lib/
+wwwroot/dist/
