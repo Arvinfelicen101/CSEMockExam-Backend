@@ -1,6 +1,7 @@
 ﻿using CSEMockInterview.DTOs;
 using CSEMockInterview.DTOs.Auth;
 using CSEMockInterview.Models;
+using CSEMockInterview.Repository;
 using CSEMockInterview.Repository.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -13,11 +14,11 @@ namespace CSEMockInterview.Services.Authentication
 {
     public class AuthServices
     {
-        private readonly AuthRepository repository;
+        private readonly IAuthRepository repository;
         private readonly UserManager<Users> manager;
         private readonly IConfiguration config;
 
-        public AuthServices(AuthRepository _repository, UserManager<Users> _manager, IConfiguration _config)
+        public AuthServices(IAuthRepository _repository, UserManager<Users> _manager, IConfiguration _config)
         {
             repository = _repository;
             manager = _manager;
