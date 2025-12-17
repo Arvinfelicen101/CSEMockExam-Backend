@@ -15,7 +15,7 @@ namespace CSEMockInterview.Controllers
         private readonly IAuthServices _service;
         private readonly IUserManagementServices _userManagement;
 
-        public HomePageController(IAuthServices service, UserManagementServices userManagement)
+        public HomePageController(IAuthServices service, IUserManagementServices userManagement)
         {
             _service = service;
             _userManagement = userManagement;
