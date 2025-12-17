@@ -1,5 +1,4 @@
-﻿using CSEMockInterview.DTOs;
-using CSEMockInterview.DTOs.Auth;
+﻿using CSEMockInterview.DTOs.Auth;
 using CSEMockInterview.Exceptions;
 using CSEMockInterview.Models;
 using CSEMockInterview.Repository.UserManagement;
