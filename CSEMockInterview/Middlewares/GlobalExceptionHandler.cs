@@ -35,7 +35,14 @@
                     Title = "Not Found",
                     Detail = nfe.Message
                 },
-
+                
+                UnauthorizedAccessException uae => new ProblemDetails
+                {
+                    Status = StatusCodes.Status401Unauthorized,
+                    Title = "Unauthorized",
+                    Detail = uae.Message
+                },
+                
                 _ => new ProblemDetails
                 {
                     Status = StatusCodes.Status500InternalServerError,
