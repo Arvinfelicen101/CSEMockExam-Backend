@@ -8,8 +8,10 @@ using System.Text;
 using CSEMockInterview.Middlewares;
 using Scalar.AspNetCore;
 using CSEMockInterview.Repository.Auth;
+using CSEMockInterview.Repository.Importer;
 using CSEMockInterview.Services.Authentication;
 using CSEMockInterview.Repository.UserManagement;
+using CSEMockInterview.Services.Importer;
 using CSEMockInterview.Services.UserManagement;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,10 +22,12 @@ var builder = WebApplication.CreateBuilder(args);
 //DI Repositories
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
+builder.Services.AddScoped<IImporterRepository, ImporterRepository>();
 
 //DI Services
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IUserManagementServices, UserManagementServices>();
+builder.Services.AddScoped<IImporterService, ImporterService>();
 
 //DI Middleware
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
