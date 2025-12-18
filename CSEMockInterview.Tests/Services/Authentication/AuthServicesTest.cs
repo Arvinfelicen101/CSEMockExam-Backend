@@ -50,7 +50,7 @@ namespace CSEMockInterview.Tests.Services.Authentication
         [Fact]
         public async Task CheckUserService_InvalidUser_ThrowsException()
         {
-            // ---------- ARRANGE ----------
+            //  ARRANGE
             var loginDto = new LoginDTO
             {
                 username = "wrong",
@@ -61,12 +61,45 @@ namespace CSEMockInterview.Tests.Services.Authentication
                 .Setup(r => r.CheckUserRepository(It.IsAny<Users>()))
                 .ReturnsAsync((Users)null);
 
-            // ---------- ACT & ASSERT ----------
+            //  ACT & ASSERT
             var exception = await Assert.ThrowsAsync<Exception>(
                 () => _authService.CheckUserService(loginDto)
             );
 
             Assert.Equal("User does not exists!", exception.Message);
+        }
+
+        [Fact]
+        public async Task CheckUserService_ValidUser_ReturnsTokens()
+        {
+            //  ARRANGE 
+            var loginDto = new LoginDTO
+            {
+                username = "testuser",
+                password = "password"
+            };
+
+            var user = new Users
+            {
+                Id = "1",
+                UserName = "testuser"
+            };
+
+            _authRepoMock
+                .Setup(r => r.CheckUserRepository(It.IsAny<Users>()))
+                .ReturnsAsync(user);
+
+            _userManagerMock
+                .Setup(m => m.GetRolesAsync(user))
+                .ReturnsAsync(new List<string> { "User" });
+
+            // ACT 
+            var result = await _authService.CheckUserService(loginDto);
+
+            //  ASSERT 
+            Assert.NotNull(result);
+            Assert.False(string.IsNullOrWhiteSpace(result.AccessToken));
+            Assert.False(string.IsNullOrWhiteSpace(result.RefreshToken));
         }
     }
 }
