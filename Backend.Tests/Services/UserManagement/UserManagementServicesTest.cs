@@ -6,7 +6,7 @@ using Backend.Services.UserManagement;
 using Moq;
 
 
-namespace CSEMockInterview.Tests.Services.UserManagement;
+namespace Backend.Tests.Services.UserManagement;
 
 public class UserManagementServicesTest
 {

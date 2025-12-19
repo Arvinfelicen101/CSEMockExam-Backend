@@ -1,4 +1,4 @@
-﻿namespace CSEMockInterview.Tests;
+﻿namespace Backend.Tests;
 
 public class UnitTest1
 {
