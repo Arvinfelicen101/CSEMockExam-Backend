@@ -1,8 +1,8 @@
-using CSEMockInterview.DTOs.Auth;
-using CSEMockInterview.Exceptions;
-using CSEMockInterview.Models;
-using CSEMockInterview.Repository.UserManagement;
-using CSEMockInterview.Services.UserManagement;
+using Backend.DTOs.Auth;
+using Backend.Exceptions;
+using Backend.Models;
+using Backend.Repository.UserManagement;
+using Backend.Services.UserManagement;
 using Moq;
 
 

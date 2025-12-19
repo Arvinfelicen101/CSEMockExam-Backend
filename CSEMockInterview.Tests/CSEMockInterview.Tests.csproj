@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\CSEMockInterview\CSEMockInterview.csproj" />
+      <ProjectReference Include="..\Backend\Backend.csproj" />
     </ItemGroup>
 
 </Project>
