@@ -1,6 +1,8 @@
+using Backend.DTOs.Importer;
+
 namespace Backend.Services.Importer;
 
 public interface IImporterService
 {
-    // Task<bool> CheckFileAsync(IFormFile file);
+    Task ParseFileAsync(ImporterDTO file);
 }
