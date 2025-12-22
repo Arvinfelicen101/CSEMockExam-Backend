@@ -15,9 +15,10 @@ public class ImporterController : ControllerBase
         _service = service;
     }
 
-    // [HttpPost]
-    // public async Task<IActionResult> Importer(ImporterDTO file)
-    // {
-    //     return "hey";
-    // }
+    [HttpPost]
+    public async Task<IActionResult> Importer(ImporterDTO xlsx)
+    {
+        await _service.ProcessFileAsync(xlsx);
+        return Ok(new { message = "User created successfully" });
+    }
 }
