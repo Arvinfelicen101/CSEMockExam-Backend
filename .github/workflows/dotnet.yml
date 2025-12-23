@@ -42,11 +42,11 @@ jobs:
       run: dotnet build --no-restore
       
     - name: Run migrations against Postgres
+      working-directory: Backend
       env:
         ConnectionStrings__DefaultConnection: "Host=localhost;Port=5432;Database=CSEMockExam;Username=postgres;Password=postgres"
-      run: dotnet ef database update \
-         --project Backend/Backend.csproj \
-         --startup-project Backend/Backend.csproj
+      run: dotnet ef database update
+
 
     - name: Test
       run: dotnet test Backend.Tests/Backend.Tests.csproj --no-build --verbosity normal
