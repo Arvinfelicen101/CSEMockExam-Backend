@@ -15,42 +15,55 @@ public class ImporterService : IImporterService
 
     public async Task ProcessFileAsync(ImporterDTO xlsx)
     {
-        
+        var result = await ParseFileAsync(xlsx);
+        var mappeddata = await ServiceHelper.ImportMapper(result);
+
     }
 
     public async Task<List<RawDataDTO>> ParseFileAsync(ImporterDTO xlsx)
     {
+        string sheetName;
         var extractedData = new List<RawDataDTO>();
         using (var stream = new MemoryStream())
         {
             await xlsx.file.CopyToAsync(stream);
-
-            using (var workbook = new XLWorkbook(stream))
+            try
             {
-                foreach (var worksheet in workbook.Worksheets)
+                using (var workbook = new XLWorkbook(stream))
                 {
-                    string sheetName = worksheet.Name;
-                    var rows = worksheet.RowsUsed().Skip(1);
-                    foreach (var row in rows)
+                    foreach (var worksheet in workbook.Worksheets)
                     {
-                        extractedData.Add(new RawDataDTO()
+                        sheetName = worksheet.Name;
+                        var rows = worksheet.RowsUsed().Skip(1);
+                        foreach (var row in rows)
                         {
-                            RawCategories = sheetName,
-                            RawQuestions = row.Cell(1).GetString(),
-                            RawSubCategories = row.Cell(2).GetString(),
-                            RawChoices = new List<string>()
+                            extractedData.Add(new RawDataDTO()
                             {
-                                row.Cell(3).GetString(),
-                                row.Cell(4).GetString(),
-                                row.Cell(5).GetString(),
-                            },
-                            RawAnswers = row.Cell(6).GetString(),
-                        });
+                                RawCategories = sheetName,
+                                RawQuestions = row.Cell(1).GetString(),
+                                RawSubCategories = row.Cell(2).GetString(),
+                                RawChoices = new List<string>()
+                                {
+                                    row.Cell(3).GetString(),
+                                    row.Cell(4).GetString(),
+                                    row.Cell(5).GetString(),
+                                },
+                                RawAnswers = row.Cell(6).GetString(),
+                                RawParagraph = row.Cell(7).GetString(),
+                            });
+                        }
                     }
                 }
             }
+            catch (Exception e)
+            {
+                throw new Exception();
+            }
+            
         }
 
         return extractedData;
     }
+    
+    //create mapping for fks first
 }
