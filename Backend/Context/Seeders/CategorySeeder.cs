@@ -1,5 +1,5 @@
-﻿using CSEMockInterview.Models;
-using CSEMockInterview.Models.enums;
+﻿using Backend.Models;
+using Backend.Models.enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace CSEMockInterview.Context.Seeders
