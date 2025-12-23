@@ -1,5 +1,7 @@
 using Backend.DTOs.Importer;
 using Backend.Models;
+using Backend.Models.enums;
+
 namespace Backend.Services.Importer;
 
 public static class ServiceHelper
@@ -13,11 +15,43 @@ public static class ServiceHelper
         //fk first to be mapped, thrn implement caching
         foreach (var rowData in list)
         {
-            categories.Add(new Category()
+            if (Enum.TryParse<Categories>(rowData.RawCategories, out var Verbal)
+                && Verbal == Categories.Verbal)
             {
-                CategoryName = rowData.RawCategories
-            });
-           
+                categories.Add(new Category()
+                {
+                    CategoryName = Categories.Verbal
+                });
+            } else if (Enum.TryParse<Categories>(rowData.RawCategories, out var Analytical) 
+                       && Analytical == Categories.Analytical)
+            {
+                categories.Add(new Category()
+                {
+                    CategoryName = Categories.Analytical
+                });
+            } else if (Enum.TryParse<Categories>(rowData.RawCategories, out var Numerical) 
+                       && Numerical == Categories.Numerical)
+            {
+                categories.Add(new Category()
+                {
+                    CategoryName = Categories.Numerical
+                });
+            } else if (Enum.TryParse<Categories>(rowData.RawCategories, out var Clerical) 
+                       && Clerical == Categories.Clerical)
+            {
+                categories.Add(new Category()
+                {
+                    CategoryName = Categories.Clerical
+                });
+            } else if (Enum.TryParse<Categories>(rowData.RawCategories, out var General) 
+                       && General == Categories.General)
+            {
+                categories.Add(new Category()
+                {
+                    CategoryName = Categories.General
+                });
+            }
+
             paragraphs.Add(new Paragraphs()
             {
                 ParagraphText = rowData.RawParagraph
