@@ -10,6 +10,8 @@ public class CategoryService : ICategoryService
     private readonly ICategoryRepository _repository;
     private readonly ILogger<CategoryService> _logger;
 
+    private const string CategoryCacheKey = "category:all";
+
     public CategoryService(IMemoryCache cache, ICategoryRepository repository, ILogger<CategoryService> logger)
     {
         _cache = cache;
@@ -20,6 +22,7 @@ public class CategoryService : ICategoryService
     public async Task<IEnumerable<CategoryDTO>> GetAllService()
     {
         // _logger.LogInformation("Fetching all categories...");
+        if (_cache.TryGetValue(CategoryCacheKey, out List<CategoryDTO> cached)) return cached;
         var result = await _repository.GetAllAsync();
         var mapCategory = result.Select(c => new CategoryDTO()
         {
