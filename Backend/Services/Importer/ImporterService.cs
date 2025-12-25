@@ -1,3 +1,4 @@
+using System.Text;
 using Backend.Repository.Importer;
 using Backend.DTOs.Importer;
 using ClosedXML.Excel;
@@ -26,6 +27,23 @@ public class ImporterService : IImporterService
         var extractedData = new List<RawDataDTO>();
         using (var stream = new MemoryStream())
         {
+            var filename = xlsx.file.FileName;
+            string year = filename.Substring(0, 3);
+            int i = 5;
+            var period = new StringBuilder();
+
+            while (i < filename.Length)
+            {
+                char charPeriod = filename[i];
+
+                if (charPeriod == '_')
+                    break;
+
+                period.Append(charPeriod);
+                i++;
+            }
+
+            string result = period.ToString();
             await xlsx.file.CopyToAsync(stream);
             try
             {
@@ -34,6 +52,7 @@ public class ImporterService : IImporterService
                     foreach (var worksheet in workbook.Worksheets)
                     {
                         sheetName = worksheet.Name;
+                        
                         var rows = worksheet.RowsUsed().Skip(1);
                         foreach (var row in rows)
                         {
@@ -72,6 +91,8 @@ public class ImporterService : IImporterService
                                 },
                             
                                 RawParagraph = row.Cell(7).GetString(),
+                                RawYear = Convert.ToInt32(year),
+                                RawPeriods = result
                             });
                         }
                     }
