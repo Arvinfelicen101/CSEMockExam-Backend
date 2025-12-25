@@ -1,6 +1,8 @@
 using Backend.DTOs.Importer;
+using Backend.Services.CategoryManagement;
 using Backend.Services.Importer;
 using Microsoft.AspNetCore.Mvc;
+using Backend.Models;
 
 namespace Backend.Controllers.Importer;
 
@@ -9,10 +11,12 @@ namespace Backend.Controllers.Importer;
 public class ImporterController : ControllerBase
 {
     private readonly IImporterService _service;
+    private readonly ICategoryService _categoryService;
 
-    public ImporterController(IImporterService service)
+    public ImporterController(IImporterService service, ICategoryService categoryService)
     {
         _service = service;
+        _categoryService = categoryService;
     }
 
     [HttpPost]
@@ -20,5 +24,12 @@ public class ImporterController : ControllerBase
     {
         await _service.ProcessFileAsync(xlsx);
         return Ok(new { message = "User created successfully" });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> TestCategory()
+    {
+        var result = await _categoryService.GetAllService();
+        return Ok(result);
     }
 }
