@@ -1,4 +1,4 @@
-namespace Backend.DTOs.Category;
+namespace Backend.DTOs.Categories;
 
 public class GetCategoryDTO
 {
