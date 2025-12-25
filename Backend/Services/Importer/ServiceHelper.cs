@@ -11,9 +11,12 @@ public static class ServiceHelper
         var categories = new List<Category>();
         var paragraphs = new List<Paragraphs>();
         var choices = new List<Choices>();
+        var questions = new List<Questions>();
+        var subCategories = new List<SubCategories>();
         //fk first to be mapped, thrn implement caching
         foreach (var rowData in list)
         {
+            //category mapping
             if (Enum.TryParse<Categories>(rowData.RawCategories, out var Verbal)
                 && Verbal == Categories.Verbal)
             {
@@ -50,20 +53,45 @@ public static class ServiceHelper
                     CategoryName = Categories.General
                 });
             }
-
-            // paragraphs.Add(new Paragraphs()
-            // {
-            //     ParagraphText = rowData.RawParagraph
-            // });
             
-            var allChoices = rowData.RawChoices.ToList();
-            if (!string.IsNullOrWhiteSpace(rowData.RawAnswers))
-                allChoices.Add(rowData.RawAnswers);
-
-            choices.AddRange(allChoices.Select(c => new Choices { ChoiceText = c }));
+            //year period mapping
+            
+            // paragraph mapping
+            paragraphs.Add(new Paragraphs()
+            {
+                ParagraphText = rowData.RawParagraph,
+            });
+            //sub category mapping
+            subCategories.Add(new SubCategories()
+            {
+                SubCategoryName = rowData.RawSubCategories,
+                CategoryId = 1, // data should be from cache
+            });
+            
+            //questions mapping
+            questions.Add(new Questions()
+            {
+                QuestionName = rowData.RawQuestions,
+                ParagraphId = 1, // data should be from cache
+                SubCategoryId = 1, // data should be from cache
+                YearPeriodId = 1,  // data should be from cache
+            });
+            
+            //choices mapping
+            var allChoices = rowData.RawChoices;
+            choices.AddRange(allChoices.Select(
+                c => new Choices()
+                {
+                    ChoiceText = c.ChoiceText,
+                    IsCorrect = c.IsCorrect,
+                    QuestionId = 1 // data shoulbe from cache?
+                    
+                }
+                ));
+            
 
         }
 
-        return new MappedData(categories, choices);
+        return new MappedData(categories);
     }
 }
