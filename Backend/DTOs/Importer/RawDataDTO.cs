@@ -6,7 +6,6 @@ public class RawDataDTO
     public string? RawParagraph { get; set; }
     public string RawCategories { get; set; }
     public string RawSubCategories { get; set; }
-    public List<string> RawChoices { get; set; }
-    public string RawAnswers { get; set; }
+    public List<ChoiceDTO> RawChoices { get; set; }
     //year period
 }
