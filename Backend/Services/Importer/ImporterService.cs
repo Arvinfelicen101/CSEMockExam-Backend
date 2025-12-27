@@ -25,8 +25,13 @@ public class ImporterService : IImporterService
     public async Task ProcessFileAsync(ImporterDTO xlsx)
     {
         var categoryData = await getCategoryFK();
+        var fkData = new FKDataDTOs()
+        {
+            categoryFK = categoryData
+        };
+        
         var result = await ServiceHelper.ParseFileAsync(xlsx);
-        var mappeddata = await ServiceHelper.ImportMapper(result);
+        var mappeddata = await ServiceHelper.ImportMapper(result, fkData);
         
     }
     
