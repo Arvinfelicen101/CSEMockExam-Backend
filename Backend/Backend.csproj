@@ -30,6 +30,8 @@
 	<ItemGroup>
 		<Folder Include="Controllers\" />
 		<Folder Include="Migrations\" />
+		<Folder Include="Repository\ParagraphManagement\" />
+		<Folder Include="Services\ParagraphManagement\" />
 	</ItemGroup>
 
 	<ItemGroup>

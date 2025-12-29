@@ -1,6 +1,6 @@
 using Backend.Models;
 using Backend.Models.enums;
-using Backend.Repository.CategoryManagement;
+using Backend.Repository.YearPeriodManagement;
 using Backend.Services.CategoryManagement;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
@@ -8,14 +8,14 @@ using Moq;
 
 namespace Backend.Tests.Services.CategoryManagement;
 
-public class CategoryServiceTest
+public class YearPeriodServiceTest
 {
 
     [Fact]
     public async Task GetAllService_UsesCache_DoesNotHitRepositoryTwice()
     {
         // Arrange
-        var repoMock = new Mock<ICategoryRepository>();
+        var repoMock = new Mock<IYearPeriodRepository>();
 
         repoMock.Setup(r => r.GetAllAsync())
             .ReturnsAsync(new List<Category>
@@ -25,9 +25,9 @@ public class CategoryServiceTest
 
         var memoryCache = new MemoryCache(new MemoryCacheOptions());
 
-        var loggerMock = new Mock<ILogger<CategoryService>>();
+        var loggerMock = new Mock<ILogger<YearPeriodService>>();
 
-        var service = new CategoryService(
+        var service = new YearPeriodService(
             memoryCache,
             repoMock.Object,
             loggerMock.Object

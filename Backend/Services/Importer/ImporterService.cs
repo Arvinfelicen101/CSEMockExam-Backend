@@ -9,17 +9,17 @@ namespace Backend.Services.Importer;
 public class ImporterService : IImporterService
 {
     private readonly IImporterRepository _repository;
-    private readonly ICategoryService _categoryService;
+    private readonly IYearPeriodService _yearPeriodService;
 
-    public ImporterService(IImporterRepository repository, ICategoryService categoryService)
+    public ImporterService(IImporterRepository repository, IYearPeriodService yearPeriodService)
     {
         _repository = repository;
-        _categoryService = categoryService;
+        _yearPeriodService = yearPeriodService;
     }
 
     public async Task<IEnumerable<CategoryDTO>> getCategoryFK()
     {
-        return await _categoryService.GetAllService();
+        return await _yearPeriodService.GetAllService();
     }
     
     public async Task ProcessFileAsync(ImporterDTO xlsx)

@@ -11,12 +11,12 @@ namespace Backend.Controllers.Importer;
 public class ImporterController : ControllerBase
 {
     private readonly IImporterService _service;
-    private readonly ICategoryService _categoryService;
+    private readonly IYearPeriodService _yearPeriodService;
 
-    public ImporterController(IImporterService service, ICategoryService categoryService)
+    public ImporterController(IImporterService service, IYearPeriodService yearPeriodService)
     {
         _service = service;
-        _categoryService = categoryService;
+        _yearPeriodService = yearPeriodService;
     }
 
     [HttpPost]
@@ -29,7 +29,7 @@ public class ImporterController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> TestCategory()
     {
-        var result = await _categoryService.GetAllService();
+        var result = await _yearPeriodService.GetAllService();
         return Ok(result);
     }
 }

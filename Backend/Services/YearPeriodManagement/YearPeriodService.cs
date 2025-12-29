@@ -1,18 +1,18 @@
 using Backend.DTOs.Importer;
-using Backend.Repository.CategoryManagement;
+using Backend.Repository.YearPeriodManagement;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Backend.Services.CategoryManagement;
 
-public class CategoryService : ICategoryService
+public class YearPeriodService : IYearPeriodService
 {
     private readonly IMemoryCache _cache;
-    private readonly ICategoryRepository _repository;
-    private readonly ILogger<CategoryService> _logger;
+    private readonly IYearPeriodRepository _repository;
+    private readonly ILogger<YearPeriodService> _logger;
 
     private const string CategoryCacheKey = "category:all";
 
-    public CategoryService(IMemoryCache cache, ICategoryRepository repository, ILogger<CategoryService> logger)
+    public YearPeriodService(IMemoryCache cache, IYearPeriodRepository repository, ILogger<YearPeriodService> logger)
     {
         _cache = cache;
         _repository = repository;
