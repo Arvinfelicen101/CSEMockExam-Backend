@@ -91,9 +91,15 @@ public static class ServiceHelper
         return extractedData;
     }
 
+    // public static List<Category> CategoryMapper(List<RawDataDTO> list)
+    // {
+    //     var categories = list.Select(c => c.RawCategories == )
+    // }
+
     //create a dto for the list of fks
     public static async Task<MappedData> ImportMapper(List<RawDataDTO> list, FKDataDTOs dtos)
     {
+        //need linq 
         var categories = new List<Category>();
         var paragraphs = new List<Paragraphs>();
         var choices = new List<Choices>();
@@ -103,45 +109,7 @@ public static class ServiceHelper
         //fk first to be mapped, thrn implement caching
         foreach (var rowData in list)
         {
-            //category mapping
-            if (rowData.RawCategories == Categories.Verbal.ToString())
-            {
-                categories.Add(new Category()
-                {
-                    Id = 0,
-                    CategoryName = Categories.Verbal
-                });
-            } else if (rowData.RawCategories == Categories.Analytical.ToString())
-            {
-                categories.Add(new Category()
-                {
-                    Id = 1,
-                    CategoryName = Categories.Analytical
-                });
-            } else if (rowData.RawCategories == Categories.Clerical.ToString())
-            {
-                categories.Add(new Category()
-                {
-                    Id = 3,
-                    CategoryName = Categories.Clerical
-                });
-            } else if (rowData.RawCategories == Categories.General.ToString())
-            {
-                categories.Add(new Category()
-                {
-                    Id = 4,
-                    CategoryName = Categories.General
-                });
-            } else if (rowData.RawCategories == Categories.Numerical.ToString())
-            {
-                categories.Add(new Category()
-                {
-                    Id = 2,
-                    CategoryName = Categories.Numerical
-                });
-            }
-            
-            //year period mapping, needs cache?
+            //year period mapping, needs cache, insert data right after mapping then cache it
             if (rowData.RawPeriods == Periods.First.ToString())
             {
                 yearPeriod.Add(new YearPeriods()
@@ -160,26 +128,84 @@ public static class ServiceHelper
                 });
             }
             
-            // paragraph mapping, needs cache
+            // paragraph mapping, needs cache, insert right then cache it
             paragraphs.Add(new Paragraphs()
             {
                 ParagraphText = rowData.RawParagraph,
             });
             
-            //sub category mapping, needs cache
-            subCategories.Add(new SubCategories()
+            //category mapping
+            if (rowData.RawCategories == Categories.Verbal.ToString())
             {
-                SubCategoryName = rowData.RawSubCategories,
-                CategoryId = 1, // data should be from cache
-            });
+                categories.Add(new Category()
+                {
+                    Id = 0,
+                    CategoryName = Categories.Verbal
+                });
+                subCategories.Add(new SubCategories()
+                {
+                    SubCategoryName = rowData.RawSubCategories,
+                    CategoryId = 0,
+                });
+            } else if (rowData.RawCategories == Categories.Analytical.ToString())
+            {
+                categories.Add(new Category()
+                {
+                    Id = 1,
+                    CategoryName = Categories.Analytical
+                });
+                subCategories.Add(new SubCategories()
+                {
+                    SubCategoryName = rowData.RawSubCategories,
+                    CategoryId = 1,
+                });
+            } else if (rowData.RawCategories == Categories.Clerical.ToString())
+            {
+                categories.Add(new Category()
+                {
+                    Id = 3,
+                    CategoryName = Categories.Clerical
+                });
+                subCategories.Add(new SubCategories()
+                {
+                    SubCategoryName = rowData.RawSubCategories,
+                    CategoryId = 3,
+                });
+            } else if (rowData.RawCategories == Categories.General.ToString())
+            {
+                categories.Add(new Category()
+                {
+                    Id = 4,
+                    CategoryName = Categories.General
+                });
+                subCategories.Add(new SubCategories()
+                {
+                    SubCategoryName = rowData.RawSubCategories,
+                    CategoryId = 4,
+                });
+            } else if (rowData.RawCategories == Categories.Numerical.ToString())
+            {
+                categories.Add(new Category()
+                {
+                    Id = 2,
+                    CategoryName = Categories.Numerical
+                });
+                subCategories.Add(new SubCategories()
+                {
+                    SubCategoryName = rowData.RawSubCategories,
+                    CategoryId = 2,
+                });
+            }
             
-            //questions mapping, needs cache
+            //questions mapping, needs to be inserted for choice insertion
             questions.Add(new Questions()
             {
                 QuestionName = rowData.RawQuestions,
-                ParagraphId = 1, // data should be from cache
-                SubCategoryId = 1, // data should be from cache
-                YearPeriodId = 1,  // data should be from cache
+                ParagraphId = 1,
+                SubCategoryId = subCategories
+                    .Where(sc => sc.SubCategoryName == rowData.RawSubCategories)
+                    .Select(s => s.Id).FirstOrDefault(),
+                YearPeriodId = 1,
             });
             
             //choices mapping, no need cache
