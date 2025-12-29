@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace Backend.Tests.Services.CategoryManagement;
+namespace Backend.Tests.Services.YearPeriodManagement;
 
 public class YearPeriodServiceTest
 {
