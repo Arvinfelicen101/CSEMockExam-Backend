@@ -10,10 +10,12 @@ using Backend.Middlewares;
 using Scalar.AspNetCore;
 using Backend.Repository.Auth;
 using Backend.Repository.Importer;
+using Backend.Repository.ParagraphManagement;
 using Backend.Services.Authentication;
 using Backend.Repository.UserManagement;
 using Backend.Repository.YearPeriodManagement;
 using Backend.Services.Importer;
+using Backend.Services.ParagraphManagement;
 using Backend.Services.UserManagement;
 using Backend.Services.YearPeriodManagement;
 
@@ -27,13 +29,15 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IImporterRepository, ImporterRepository>();
-builder.Services.AddScoped<IYearPeriodRepository, YearPeriod>();
+builder.Services.AddScoped<IYearPeriodRepository, YearPeriodManagement>();
+builder.Services.AddScoped<IParagraphManagementRepository, ParagraphManagementRepository>();
 
 //DI Services
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IUserManagementServices, UserManagementServices>();
 builder.Services.AddScoped<IImporterService, ImporterService>();
 builder.Services.AddScoped<IYearPeriodService, YearPeriodService>();
+builder.Services.AddScoped<IParagraphManagementService, ParagraphManagementService>();
 
 //DI Middleware
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
