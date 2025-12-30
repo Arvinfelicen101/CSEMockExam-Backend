@@ -28,8 +28,8 @@ public class ImporterService : IImporterService
     {
         return await _paragraphService.GetAllService();
     }
-    
-    public async Task ProcessFileAsync(ImporterDTO xlsx)
+
+    public async Task<FKDataDTOs> ExistingCache()
     {
         var YearPeriodData = await getCategoryFK();
         var ParagraphData = await getParagraphFK();
@@ -38,10 +38,24 @@ public class ImporterService : IImporterService
             YearPeriodFK = YearPeriodData,
             ParagraphFK = ParagraphData
         };
-        
+        return fkData;
+    }
+    
+    //should be map and insert fk data
+    public async Task ProcessFileAsync(ImporterDTO xlsx)
+    {
+        var fkData = await ExistingCache();
         var result = await ServiceHelper.ParseFileAsync(xlsx);
-        var mappeddata = await ServiceHelper.ImportMapper(result, fkData);
+        var mappeddata = await ServiceHelper.ImportFKMapper(result, fkData);
+        
+        //insert data to repository
+        
+        //instead of looking at cache use mapped data, THEN INSERT QUESTIONS
         
     }
+    
+    
+    //map and insert question and choices data
+    
     
 }
