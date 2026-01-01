@@ -3,6 +3,7 @@ using Backend.DTOs.Importer;
 using Backend.Models.enums;
 using Backend.Models;
 using ClosedXML.Excel;
+using Paragraphs = Backend.Models.Paragraphs;
 
 namespace Backend.Services.Importer;
 
@@ -96,7 +97,8 @@ public static class ServiceHelper
     public static async Task<MappedDataFK> ImportFKMapper(List<RawDataDTO> list, FKDataDTOs dtos)
     {
         //PREPARE CACHE VARIABLES FIRST / dictionaries
-        
+        var paragraphCache = dtos.ParagraphFK.ToDictionary(p => p.ParagraphText, p => p);
+        var yearPeriodCache = dtos.YearPeriodFK.ToDictionary(y => (y.Year, y.Periods.ToString()), y => y);
         //need linq 
         var questions = new List<Questions>();
         var choices = new List<Choices>();
@@ -105,22 +107,42 @@ public static class ServiceHelper
         foreach (var rowData in list)
         {
             //just check every fk if it exist or not in the cache
+
+            if (!paragraphCache.TryGetValue(rowData.RawParagraph, out var paragraph))
+            {
+                paragraph = new Paragraphs()
+                {
+                    ParagraphText = rowData.RawParagraph
+                };
+            }
+
+            if (!yearPeriodCache.TryGetValue((rowData.RawYear, rowData.RawPeriods), out var yearPeriods))
+            {
+                if (Enum.TryParse<Periods>(
+                        rowData.RawPeriods,  // the string to convert
+                        true,                // ignore case
+                        out var period))     // out parameter for the enum value
+                {
+                    // Success: period is now a Periods enum
+                    rowData.RawPeriods = period.ToString();
+                }
+
+                yearPeriods = new YearPeriods()
+                {
+                    Year = rowData.RawYear,
+                    Periods = period
+                };
+            }
             questions.Add(new Questions()
             {
                 QuestionName = rowData.RawQuestions,
-                ParagraphNavigation = new Paragraphs()
-                {
-                    ParagraphText = rowData.RawParagraph // should be variable of entity 
-                },
+                ParagraphNavigation = paragraph,
                 SubCategoryNavigation = new SubCategories()
                 {
                     SubCategoryName = rowData.RawSubCategories
                 },
-                YearPeriodNavigation = new YearPeriods()
-                {
-                    Year = rowData.RawYear,
-                    Periods = rowData.RawPeri()
-                }
+                YearPeriodNavigation = yearPeriods,
+                
             });
             
             // choices.Add(new Choices()
