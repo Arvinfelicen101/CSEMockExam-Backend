@@ -1,18 +1,26 @@
 using Backend.Context;
+using Backend.Middlewares;
 using Backend.Models;
+using Backend.Repository.Auth;
+using Backend.Repository.Choices;
+using Backend.Repository.Importer;
+using Backend.Repository.Question;
+using Backend.Repository.SubCategory;
+using Backend.Repository.UserManagement;
+using Backend.Services.Authentication;
+using Backend.Services.Choices;
+using Backend.Services.Importer;
+using Backend.Services.Question;
+using Backend.Services.Question.QuestionValidator;
+using Backend.Services.SubCategory;
+using Backend.Services.UserManagement;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Backend.Middlewares;
 using Scalar.AspNetCore;
-using Backend.Repository.Auth;
-using Backend.Repository.Importer;
-using Backend.Services.Authentication;
-using Backend.Repository.UserManagement;
-using Backend.Services.Importer;
-using Backend.Services.UserManagement;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,11 +31,19 @@ builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 builder.Services.AddScoped<IUserManagementRepository, UserManagementRepository>();
 builder.Services.AddScoped<IImporterRepository, ImporterRepository>();
+builder.Services.AddScoped<IQuestionRepository, QuestionRepository>();
+builder.Services.AddScoped<IChoicesRepository, ChoicesRepository>();
+builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
 
 //DI Services
+builder.Services.AddScoped<IQuestionValidator, QuestionValidator>();
 builder.Services.AddScoped<IAuthServices, AuthServices>();
 builder.Services.AddScoped<IUserManagementServices, UserManagementServices>();
 builder.Services.AddScoped<IImporterService, ImporterService>();
+builder.Services.AddScoped<IQuestionService,  QuestionService>();
+builder.Services.AddScoped<IChoiceService, ChoiceService>();
+builder.Services.AddScoped<ISubCategoryService, SubCategoryService>();
+
 
 //DI Middleware
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -72,6 +88,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
+
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
