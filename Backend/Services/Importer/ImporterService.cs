@@ -49,9 +49,6 @@ public class ImporterService : IImporterService
         var result = await ServiceHelper.ParseFileAsync(xlsx);
         var mappeddata = await ServiceHelper.ImportFKMapper(result, fkData);
         
-        //insert data to repository
-        
-        //instead of looking at cache use mapped data, THEN INSERT QUESTIONS
         
     }
     
