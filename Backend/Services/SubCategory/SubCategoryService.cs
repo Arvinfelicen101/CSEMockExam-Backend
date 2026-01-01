@@ -57,6 +57,7 @@ namespace Backend.Services.SubCategory
             _cache.Remove(CacheKeys.SubCategoryAll);
         }
 
+        // Read
         public async Task<List<SubCategoryListDTO>> GetAllAsync()
         {
             if (_cache.TryGetValue(CacheKeys.SubCategoryAll, out List<SubCategoryListDTO> cached))
