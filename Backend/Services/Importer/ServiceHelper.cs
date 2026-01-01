@@ -94,11 +94,20 @@ public static class ServiceHelper
     
 
     //create a dto for the list of fks, should be in service if it need to insert data, possible to be not. just separate method
-    public static async Task<MappedDataFK> ImportFKMapper(List<RawDataDTO> list, FKDataDTOs dtos)
+    public static async Task<List<Questions>> ImportFKMapper(List<RawDataDTO> list, FKDataDTOs dtos)
     {
         //PREPARE CACHE VARIABLES FIRST / dictionaries
         var paragraphCache = dtos.ParagraphFK.ToDictionary(p => p.ParagraphText, p => p);
         var yearPeriodCache = dtos.YearPeriodFK.ToDictionary(y => (y.Year, y.Periods.ToString()), y => y);
+        var subCategoryCache = new Dictionary<string, SubCategories>();
+        var categoryMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["Verbal"] = 1,
+            ["Analytical"] = 2,
+            ["Numerical"] = 3,
+            ["Clerical"] = 4,
+            ["General"] = 5
+        };
         //need linq 
         var questions = new List<Questions>();
         var choices = new List<Choices>();
@@ -118,12 +127,8 @@ public static class ServiceHelper
 
             if (!yearPeriodCache.TryGetValue((rowData.RawYear, rowData.RawPeriods), out var yearPeriods))
             {
-                if (Enum.TryParse<Periods>(
-                        rowData.RawPeriods,  // the string to convert
-                        true,                // ignore case
-                        out var period))     // out parameter for the enum value
+                if (Enum.TryParse<Periods>(rowData.RawPeriods, true, out var period))
                 {
-                    // Success: period is now a Periods enum
                     rowData.RawPeriods = period.ToString();
                 }
 
@@ -133,30 +138,37 @@ public static class ServiceHelper
                     Periods = period
                 };
             }
+            
+            if (!subCategoryCache.TryGetValue(rowData.RawSubCategories, out var subCategories))
+            {
+                if (!categoryMap.TryGetValue(rowData.RawCategories, out var categoryId))
+                    throw new Exception($"Unknown category: {rowData.RawCategories}");
+
+                subCategories = new SubCategories
+                {
+                    SubCategoryName = rowData.RawSubCategories,
+                    CategoryId = categoryId
+                };
+                
+                subCategoryCache[rowData.RawSubCategories] = subCategories;
+            }
+            
+            //might need mapping and lookup for category
             questions.Add(new Questions()
             {
                 QuestionName = rowData.RawQuestions,
                 ParagraphNavigation = paragraph,
-                SubCategoryNavigation = new SubCategories()
-                {
-                    SubCategoryName = rowData.RawSubCategories
-                },
+                SubCategoryNavigation = subCategories,
                 YearPeriodNavigation = yearPeriods,
-                
             });
             
-            // choices.Add(new Choices()
-            // {
-            //     ChoiceText = rowData.RawChoices.Where(c => c.ChoiceText == ra)
-            // });
+            choices.Add(new Choices()
+            {
+
+            });
         }
 
-        return new MappedDataFK()
-        {
-            SubCategoriesList = subCategories,
-            YearPeriodsList = yearPeriod,
-            ParagraphsList = paragraphs
-        };
+        return questions;
     }
     
 }
