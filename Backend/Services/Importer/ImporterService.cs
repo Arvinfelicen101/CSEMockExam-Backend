@@ -1,6 +1,7 @@
 using System.Text;
 using Backend.Repository.Importer;
 using Backend.DTOs.Importer;
+using Backend.Models;
 using Backend.Services.ParagraphManagement;
 using Backend.Services.YearPeriodManagement;
 using ClosedXML.Excel;
@@ -19,12 +20,12 @@ public class ImporterService : IImporterService
         _yearPeriodService = yearPeriodService;
     }
 
-    public async Task<IEnumerable<YearPeriodDTO>> getCategoryFK()
+    public async Task<IEnumerable<YearPeriods>> getCategoryFK()
     {
         return await _yearPeriodService.GetAllService();
     }
     
-    public async Task<IEnumerable<ParagraphDTO>> getParagraphFK()
+    public async Task<IEnumerable<Paragraphs>> getParagraphFK()
     {
         return await _paragraphService.GetAllService();
     }

@@ -1,8 +1,8 @@
-using Backend.DTOs.Importer;
+using Backend.Models;
 
 namespace Backend.Services.YearPeriodManagement;
 
 public interface IYearPeriodService
 {
-    Task<IEnumerable<YearPeriodDTO>> GetAllService();
+    Task<IEnumerable<YearPeriods>> GetAllService();
 }

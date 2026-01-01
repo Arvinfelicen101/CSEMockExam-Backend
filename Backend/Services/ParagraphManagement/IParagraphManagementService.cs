@@ -1,8 +1,9 @@
 using Backend.DTOs.Importer;
+using Backend.Models;
 
 namespace Backend.Services.ParagraphManagement;
 
 public interface IParagraphManagementService
 {
-    Task<IEnumerable<ParagraphDTO>> GetAllService();
+    Task<IEnumerable<Paragraphs>> GetAllService();
 }
