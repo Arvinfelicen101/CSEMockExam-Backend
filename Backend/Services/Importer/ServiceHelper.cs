@@ -94,11 +94,11 @@ public static class ServiceHelper
     
 
     //create a dto for the list of fks, should be in service if it need to insert data, possible to be not. just separate method
-    public static async Task<List<Questions>> ImportFKMapper(List<RawDataDTO> list, FKDataDTOs dtos)
+    public static async Task<(List<Questions>, List<Choices>)> ImportFKMapper(List<RawDataDTO> list, FKDataDTOs dtos)
     {
         //PREPARE CACHE VARIABLES FIRST / dictionaries
         var paragraphCache = dtos.ParagraphFK.ToDictionary(p => p.ParagraphText, p => p);
-        var yearPeriodCache = dtos.YearPeriodFK.ToDictionary(y => (y.Year, y.Periods.ToString()), y => y);
+        var yearPeriodCache = dtos.YearPeriodFK.ToDictionary(y => (y.Year, y.Periods), y => y);
         var subCategoryCache = new Dictionary<string, SubCategories>();
         var categoryMap = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
         {
@@ -123,20 +123,17 @@ public static class ServiceHelper
                 {
                     ParagraphText = rowData.RawParagraph
                 };
+                paragraphCache[rowData.RawParagraph] = paragraph;
             }
-
-            if (!yearPeriodCache.TryGetValue((rowData.RawYear, rowData.RawPeriods), out var yearPeriods))
+           
+            if (!yearPeriodCache.TryGetValue((rowData.RawYear, Enum.TryParse<Periods>(rowData.RawPeriods, true, out var period) ? period : default), out var yearPeriods))
             {
-                if (Enum.TryParse<Periods>(rowData.RawPeriods, true, out var period))
-                {
-                    rowData.RawPeriods = period.ToString();
-                }
-
-                yearPeriods = new YearPeriods()
+                yearPeriods = new YearPeriods
                 {
                     Year = rowData.RawYear,
                     Periods = period
                 };
+                yearPeriodCache[(rowData.RawYear, period)] = yearPeriods;
             }
             
             if (!subCategoryCache.TryGetValue(rowData.RawSubCategories, out var subCategories))
@@ -154,21 +151,28 @@ public static class ServiceHelper
             }
             
             //might need mapping and lookup for category
-            questions.Add(new Questions()
+            //check for duplicates in cache
+            var questionData = new Questions()
             {
                 QuestionName = rowData.RawQuestions,
                 ParagraphNavigation = paragraph,
                 SubCategoryNavigation = subCategories,
                 YearPeriodNavigation = yearPeriods,
-            });
-            
-            choices.Add(new Choices()
-            {
+            };
+            questions.Add(questionData);
 
-            });
+            foreach (var choiceList in rowData.RawChoices)
+            {
+                choices.Add(new Choices()
+                {
+                    ChoiceText = choiceList.ChoiceText,
+                    IsCorrect = choiceList.IsCorrect,
+                    QuestionsNavigation = questionData
+                });
+            }
         }
 
-        return questions;
+        return (questions, choices);
     }
     
 }
