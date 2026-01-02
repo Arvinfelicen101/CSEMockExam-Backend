@@ -16,20 +16,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Setup .NET SDK
+    - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 9.0.x
-
-    - name: Clear NuGet caches
-      run: dotnet nuget locals all --clear
-
     - name: Restore dependencies
-      run: dotnet restore Backend.Tests/Backend.Tests.csproj
-
+      run: dotnet restore CSEMockInterview.sln
     - name: Build
-      run: dotnet build Backend.Tests/Backend.Tests.csproj --no-restore --configuration Release
-
+      run: dotnet build CSEMockInterview.sln --no-restore
     - name: Test
       run: dotnet test Backend.Tests/Backend.Tests.csproj --no-build --verbosity normal
