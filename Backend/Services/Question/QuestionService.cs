@@ -2,10 +2,7 @@
 using Backend.Models;
 using Backend.Repository.Question;
 using Backend.Exceptions;
-using Xunit.Sdk;
-using System.Runtime.InteropServices;
 using Microsoft.Extensions.Caching.Memory;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Backend.Services.Question.QuestionValidator;
 using Backend.Context;
 
@@ -77,8 +74,8 @@ namespace Backend.Services.Question
 
         public async Task<List<QuestionListDTO>> GetAllAsync()
         {
-            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<QuestionListDTO> cached))
-                return cached;
+            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<QuestionListDTO>? cached))
+                return cached!;
 
             var result = await _repo.GetAllAsync();
 

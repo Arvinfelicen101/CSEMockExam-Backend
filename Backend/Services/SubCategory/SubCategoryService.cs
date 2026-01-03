@@ -60,8 +60,8 @@ namespace Backend.Services.SubCategory
         // Read
         public async Task<List<SubCategoryListDTO>> GetAllAsync()
         {
-            if (_cache.TryGetValue(CacheKeys.SubCategoryAll, out List<SubCategoryListDTO> cached))
-                return cached;
+            if (_cache.TryGetValue(CacheKeys.SubCategoryAll, out List<SubCategoryListDTO>? cached))
+                return cached!;
 
             var result = await _repo.GetAllAsync();
 

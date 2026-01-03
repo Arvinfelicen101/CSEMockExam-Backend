@@ -23,10 +23,10 @@ public class YearPeriodService : IYearPeriodService
     public async Task<IEnumerable<YearPeriods>> GetAllService()
     {
         _logger.LogInformation("Fetching all YearPeriod...");
-        if (_cache.TryGetValue(YearPeriodCacheKey, out List<YearPeriods>? cached) && cached is not null)
+        if (_cache.TryGetValue(YearPeriodCacheKey, out List<YearPeriods>? cached))
         {
             _logger.LogInformation("YearPeriod CACHE HIT");
-            return cached;
+            return cached!;
         }
         
         _logger.LogInformation("YearPeriod hit missed");

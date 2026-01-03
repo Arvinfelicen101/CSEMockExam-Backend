@@ -22,9 +22,9 @@ public class ParagraphManagementService : IParagraphManagementService
 
     public async Task<IEnumerable<Paragraphs>> GetAllService()
     {
-        if (_cache.TryGetValue(ParagraphCacheKey, out IEnumerable<Paragraphs> cached))
+        if (_cache.TryGetValue(ParagraphCacheKey, out IEnumerable<Paragraphs>? cached))
         {
-            return cached;
+            return cached!;
         }
 
         var result = await _repository.GetAllAsync();
