@@ -12,5 +12,4 @@ public class UserAnswers
     
     public required int Answer { get; set; }
     public Choices? ChoicesNavigation { get; set; }
-   
 }
