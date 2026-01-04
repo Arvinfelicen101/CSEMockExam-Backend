@@ -47,16 +47,14 @@ namespace Backend.Repository.SubCategory
                 .FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public async Task UpdataSubCategoryAsync(SubCategories subCategory)
+        public void UpdataSubCategory(SubCategories subCategory)
         {
             _context.SubCategory.Update(subCategory);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteSubCategoryAsync(SubCategories subCategory)
+        public void DeleteSubCategory(SubCategories subCategory)
         {
             _context.SubCategory.Remove(subCategory);
-            await _context.SaveChangesAsync();
         }
 
         
