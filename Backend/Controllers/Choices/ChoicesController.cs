@@ -1,5 +1,6 @@
 ﻿using Backend.DTOs.Choices;
 using Backend.Services.ChoicesManagement;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers.Choices
@@ -14,14 +15,9 @@ namespace Backend.Controllers.Choices
         {
             _service = service;
         }
-
-        //[HttpPost("AddChoice")]
-        //public Task<IActionResult> CreateChoice(ChoiceDTO choice)
-        //{
-
-        //}
-
+        
         [HttpPut("{id:int}")]
+        [Authorize]
         public async Task <IActionResult> UpdateChoice(int id, ChoiceUpdateDTO dto)
         {
             await _service.UpdateChoiceAsync(id, dto);
@@ -29,6 +25,7 @@ namespace Backend.Controllers.Choices
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task <IActionResult> DeleteChoice(int id)
         {
             await _service.DeleteChoiceAsync(id);
