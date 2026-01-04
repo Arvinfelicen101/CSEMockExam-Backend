@@ -37,13 +37,9 @@ namespace Backend.Repository.ChoicesManagement
             return await _context.Choice
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
-
         
-
         public async Task<bool> QuestionExistAsync(int id)
         {
-            //var questionExist = await _context.Question.FirstAsync(c => c.Id == id);
-            //return true;
             return await _context.Question.AnyAsync(c => c.Id == id);
         }
 
