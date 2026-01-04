@@ -91,11 +91,9 @@ public static class ServiceHelper
         }
         return extractedData;
     }
-    
-    //create a dto for the list of fks, should be in service if it need to insert data, possible to be not. just separate method
+   
     public static (List<Questions>, List<Choices>) ImportFkMapper(List<RawDataDTO> list, FKDataDTOs dtos)
     {
-        //PREPARE CACHE VARIABLES FIRST / dictionaries
         var paragraphCache = dtos.ParagraphFK.ToDictionary(p => p.ParagraphText, p => p);
         var yearPeriodCache = dtos.YearPeriodFK.ToDictionary(y => (y.Year, y.Periods), y => y);
         var subCategoryCache = dtos.subCategoriesFK.ToDictionary(s => s.SubCategoryName, s => s);
@@ -150,8 +148,6 @@ public static class ServiceHelper
                 
                 subCategoryCache[rowData.RawSubCategories] = subCategories;
             }
-            //might need mapping and lookup for category
-            //check for duplicates in cache
             var questionData = new Questions()
             {
                 QuestionName = rowData.RawQuestions,
