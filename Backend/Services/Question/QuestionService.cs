@@ -61,30 +61,21 @@ namespace Backend.Services.Question
 
         public async Task<QuestionReadDTO> GetQuestionByIdAsync(int id)
         {
-            if (id <= 0)
-                throw new BadRequestException("Invalid ID");
-
+            if (id <= 0) throw new BadRequestException("Invalid ID");
             var question = await _repo.GetQuestionByIdAsync(id);
-
-            if (question == null)
-                throw new NotFoundException($"Question with ID {id} not found");
-
+            if (question == null) throw new NotFoundException($"Question with ID {id} not found");
             return question;
         }
 
         public async Task<List<QuestionListDTO>> GetAllAsync()
         {
-            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<QuestionListDTO>? cached))
-                return cached!;
-
+            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<QuestionListDTO>? cached)) return cached!;
             var result = await _repo.GetAllAsync();
-
             _cache.Set(
                 CacheKeys.QuestionsAll,
                 result,
                 TimeSpan.FromMinutes(10)
                 );
-
             return result;      
         }
 
