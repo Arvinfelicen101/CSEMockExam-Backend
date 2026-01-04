@@ -12,8 +12,8 @@ namespace Backend.Repository.Question
         Task<QuestionReadDTO?> GetQuestionByIdAsync(int id);
         Task<Questions?> FindQuestionByIdAsync(int id);
         Task<List<QuestionListDTO>> GetAllAsync();
-        void UpdateQuestion(Questions question);
-        void DeleteQuestion(Questions question);
+        Task UpdateQuestion(Questions question);
+        Task DeleteQuestion(Questions question);
 
     }
 }
