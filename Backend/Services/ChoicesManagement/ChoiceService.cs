@@ -41,7 +41,7 @@ namespace Backend.Services.ChoicesManagement
             choiceById.ChoiceText = choice.ChoiceText;
             choiceById.IsCorrect = choice.IsCorrect;
            
-            await _repo.UpdateChoiceAsync(choiceById);
+            _repo.UpdateChoice(choiceById);
             await _context.SaveChangesAsync();
 
         }
@@ -53,7 +53,7 @@ namespace Backend.Services.ChoicesManagement
 
             if (choice == null) throw new NotFoundException(("Choice does not exist"));
 
-             await _repo.DeleteChoiceAsync(choice);
+             _repo.DeleteChoice(choice);
             await  _context.SaveChangesAsync();
         }
     }
