@@ -12,6 +12,6 @@ namespace Backend.DTOs.SubCategory
         public required int CategoryId { get; set; }
 
         [MinLength(1)]
-        public required List<QuestionCreateDTO> Questions { get; set; }
+        public List<QuestionCreateDTO>? Questions { get; set; }
     }
 }

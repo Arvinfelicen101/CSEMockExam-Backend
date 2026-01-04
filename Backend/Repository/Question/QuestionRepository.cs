@@ -83,12 +83,12 @@ namespace Backend.Repository.Question
                 .FirstOrDefaultAsync(q => q.Id == id);
         }
 
-        public async Task UpdateQuestionAsync(Questions question)
+        public void UpdateQuestionAsync(Questions question)
         {
             _context.Question.Update(question);
         }
 
-        public async Task DeleteQuestionAsync(Questions question)
+        public void DeleteQuestionAsync(Questions question)
         {
             _context.Question.Remove(question);
         }

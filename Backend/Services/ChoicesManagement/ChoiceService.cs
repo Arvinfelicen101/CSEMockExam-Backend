@@ -53,8 +53,8 @@ namespace Backend.Services.ChoicesManagement
 
             if (choice == null) throw new NotFoundException(("Choice does not exist"));
 
-            await _repo.DeleteChoiceAsync(choice);
-            await _context.SaveChangesAsync();
+             await _repo.DeleteChoiceAsync(choice);
+            await  _context.SaveChangesAsync();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Backend.Repository.ChoicesManagement
         Task<bool> QuestionExistAsync(int id);
         Task CreateChoicesAsync(Choices choices);
         Task<Choices?> FindChoiceById(int id);
-        Task UpdateChoiceAsync(Choices choice);
-        Task DeleteChoiceAsync(Choices choice);
+        void UpdateChoice(Choices choice);
+        void DeleteChoice(Choices choice);
     }
 }
