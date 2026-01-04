@@ -72,8 +72,8 @@ namespace Backend.Services.SubCategory
 
         public async Task UpdateSubCategoryAsync(int id, SubCategoryUpdateDTO dto)
         {
-            var question = await _repo.FindByIdAsync(id);
-            if (question == null) throw new Exception("SubCategory does not exist");
+            var subCategory = await _repo.FindByIdAsync(id);
+            if (subCategory == null) throw new Exception("SubCategory does not exist");
 
             if (!await _repo.CategoryExistAsync(dto.CategoryId))
                 throw new NotFoundException("Category does not exist");
@@ -81,21 +81,22 @@ namespace Backend.Services.SubCategory
             if (await _repo.SubCategoryExistsAsync(dto.CategoryId, dto.SubCategoryName))
                 throw new BadRequestException("SubCategory already exists in this category");
 
-            question.SubCategoryName = dto.SubCategoryName;
-            question.CategoryId = dto.CategoryId;
+            subCategory.SubCategoryName = dto.SubCategoryName;
+            subCategory.CategoryId = dto.CategoryId;
 
-            await _repo.UpdataSubCategoryAsync(question);
+            _repo.UpdataSubCategory(subCategory);
             await _context.SaveChangesAsync();
             _cache.Remove(CacheKeys.SubCategoryAll);
         }
 
         public async Task DeleteSubCategoryAsync(int id)
         {
-           var question = await _repo.FindByIdAsync(id);
-            if (question == null) throw new Exception("SubCategory does not exist");
+            var subCategory = await _repo.FindByIdAsync(id);
+            if (subCategory == null) throw new Exception("SubCategory does not exist");
 
-            await _repo.DeleteSubCategoryAsync(question);
-            
+            _repo.DeleteSubCategory(subCategory);
+            await _context.SaveChangesAsync();
+            _cache.Remove(CacheKeys.SubCategoryAll);
         }
 
       
