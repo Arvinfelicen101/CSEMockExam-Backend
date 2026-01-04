@@ -1,11 +1,9 @@
-using System.Text;
 using Backend.Repository.Importer;
 using Backend.DTOs.Importer;
 using Backend.Models;
 using Backend.Services.ParagraphManagement;
 using Backend.Services.SubCategory;
 using Backend.Services.YearPeriodManagement;
-using ClosedXML.Excel;
 
 namespace Backend.Services.Importer;
 
@@ -52,20 +50,12 @@ public class ImporterService : IImporterService
         };
         return fkData;
     }
-    
-    //should be map and insert fk data
+
     public async Task ProcessFileAsync(ImporterDTO xlsx)
     {
         var fkData = await ExistingCache();
         var result = await ServiceHelper.ParseFileAsync(xlsx);
         var mappeddata = ServiceHelper.ImportFkMapper(result, fkData);
-
         await _repository.AddAsync(mappeddata.Item1, mappeddata.Item2);
-
     }
-    
-    
-    //map and insert question and choices data
-    
-    
 }
