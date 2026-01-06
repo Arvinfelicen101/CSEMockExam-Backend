@@ -1,16 +1,10 @@
 ﻿using Backend.Context;
 using Backend.DTOs.Choices;
-using Backend.Models;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Backend.Repository.ChoicesManagement;
 using Backend.Services.ChoicesManagement;
+using Moq;
 
-namespace Backend.Tests.Services.Choices
+namespace Backend.Tests.Services.ChoicesTest
 {
     public class ChoiceServiceTest
     {
