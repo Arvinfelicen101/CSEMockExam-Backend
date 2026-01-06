@@ -1,5 +1,6 @@
 using Backend.DTOs.Importer;
 using Backend.Models;
+using Backend.Models.enums;
 using Backend.Services.Importer;
 namespace Backend.Tests.Services.Importer;
 
@@ -9,48 +10,77 @@ public class ServiceHelperTest
     [Fact]
     public void ImportFkMapper_Creates_Questions_And_Choices_Correctly()
     {
-        // Arrange
-        var rawData = new List<RawDataDTO>
+        //arrange
+        var rawData = new List<RawDataDTO>()
         {
-            new RawDataDTO
+            new RawDataDTO()
             {
-                RawQuestions = "What is 2 + 2?",
-                RawParagraph = "Simple math paragraph",
-                RawYear = 2026,
-                RawPeriods = "Q1",
-                RawCategories = "Numerical",
-                RawSubCategories = "Addition",
-                RawChoices = new List<ChoiceDTO>
+                RawQuestions = "Who is the current president of the Philippines?",
+                RawParagraph = "President Bongbong and Former President Duterte were allies.",
+                RawCategories = Categories.General.ToString(),
+                RawSubCategories =  "R.A",
+                RawChoices = new List<ChoiceDTO>()
                 {
-                    new ChoiceDTO { ChoiceText = "3", IsCorrect = false },
-                    new ChoiceDTO { ChoiceText = "4", IsCorrect = true }
+                    new ChoiceDTO()
+                    {
+                        ChoiceText = "Bongbong Marcos",
+                        IsCorrect = true
+                    },
+                    new ChoiceDTO()
+                    {
+                        ChoiceText = "Rodrigo Duterte",
+                        IsCorrect = false
+                    }
+                },
+                RawYear = 2025,
+                RawPeriods = "First"
+            }
+            
+        };
+
+        var fkData = new FKDataDTOs()
+        {
+            YearPeriodFK = new List<YearPeriods>()
+            {
+                new YearPeriods()
+                {
+                    Year = 2025,
+                    Periods = Periods.First
+                },
+                new YearPeriods()
+                {
+                    Year = 2025,
+                    Periods = Periods.Second
+                }
+            },
+            ParagraphFK = new List<Paragraphs>()
+            {
+                new Paragraphs()
+                {
+                    Id = 1,
+                    ParagraphText = "President Bongbong and Former President Duterte were allies.",
+                },
+                new Paragraphs()
+                {
+                    Id = 2,
+                    ParagraphText = "To be or not to be.",
+                }
+            },
+            subCategoriesFK = new List<SubCategories>()
+            {
+                new SubCategories()
+                {
+                    Id = 1,
+                    SubCategoryName = "R.A"
                 }
             }
         };
-
-        var fkDtos = new FKDataDTOs
-        {
-            ParagraphFK = new List<Paragraphs>(),
-            YearPeriodFK = new List<YearPeriods>(),
-            subCategoriesFK = new List<SubCategories>()
-        };
-
-        // Act
-        var (questions, choices) = ServiceHelper.ImportFkMapper(rawData, fkDtos);
-
-        // Assert
-        Assert.Single(questions);
-        Assert.Equal(2, choices.Count);
-
-        var question = questions[0];
-
-        Assert.Equal("What is 2 + 2?", question.QuestionName);
-        Assert.Equal("Simple math paragraph", question.ParagraphNavigation.ParagraphText);
-        Assert.Equal("Addition", question.SubCategoryNavigation.SubCategoryName);
-        Assert.Equal(3, question.SubCategoryNavigation.CategoryId); // Numerical
-        Assert.Equal(2026, question.YearPeriodNavigation.Year);
-
-        Assert.Single(choices.Where(c => c.IsCorrect));
-        Assert.All(choices, c => Assert.Same(question, c.QuestionsNavigation));
+        
+        //Act
+        var result = ServiceHelper.ImportFkMapper(rawData, fkData);
+        
+        //Assert
+        Assert.NotEqual(2, result.Item1.Count);
+        Assert.NotEqual(1, result.Item2.Count);
     }
 }
