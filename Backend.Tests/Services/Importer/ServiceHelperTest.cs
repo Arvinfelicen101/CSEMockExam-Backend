@@ -78,7 +78,14 @@ public class ServiceHelperTest
         
         //Act
         var result = ServiceHelper.ImportFkMapper(rawData, fkData);
-        
+        var correctChoice = result.Item2.First(c => c.IsCorrect);
+        var wrongChoice = result.Item2.First(c => !c.IsCorrect);
+
+        Assert.Equal("Bongbong Marcos", correctChoice.ChoiceText);
+        Assert.True(correctChoice.IsCorrect);
+
+        Assert.Equal("Rodrigo Duterte", wrongChoice.ChoiceText);
+        Assert.False(wrongChoice.IsCorrect);
         //Assert
         Assert.NotEqual(2, result.Item1.Count);
         Assert.NotEqual(1, result.Item2.Count);
