@@ -57,6 +57,10 @@ namespace Backend.Repository.SubCategory
             _context.SubCategory.Remove(subCategory);
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
         
     }
 

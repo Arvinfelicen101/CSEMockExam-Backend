@@ -17,5 +17,7 @@ namespace Backend.Repository.SubCategory
 
         void UpdataSubCategory(SubCategories subCategory);
         void DeleteSubCategory(SubCategories subCategory);
+
+        Task SaveChangesAsync();
     }
 }

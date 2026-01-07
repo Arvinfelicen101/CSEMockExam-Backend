@@ -93,6 +93,11 @@ namespace Backend.Repository.Question
             _context.Question.Remove(question);
         }
 
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
        
     }
 }

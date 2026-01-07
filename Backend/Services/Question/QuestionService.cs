@@ -13,14 +13,12 @@ namespace Backend.Services.Question
         private readonly IQuestionRepository _repo;
         private readonly IMemoryCache _cache;
         private readonly IQuestionValidator _validator;
-        private readonly MyDbContext _context;
 
-        public QuestionService(IQuestionRepository repo, IMemoryCache cache, IQuestionValidator validator, MyDbContext context)
+        public QuestionService(IQuestionRepository repo, IMemoryCache cache, IQuestionValidator validator)
         {
             _repo = repo;
             _cache = cache;
             _validator = validator;
-            _context = context;
         }
         public async Task CreateQuestionAsync(QuestionCreateDTO question)
         {
@@ -55,7 +53,7 @@ namespace Backend.Services.Question
             }
 
             await _repo.AddQuestionAsync(questionInfo);
-            await _context.SaveChangesAsync();
+            await _repo.SaveChangesAsync();
             _cache.Remove(CacheKeys.QuestionsAll);
         }
 
@@ -100,7 +98,7 @@ namespace Backend.Services.Question
 
 
             _repo.UpdateQuestion(questionById);
-            await _context.SaveChangesAsync();
+            await _repo.SaveChangesAsync();
             _cache.Remove(CacheKeys.QuestionsAll);
 
         }
@@ -111,7 +109,7 @@ namespace Backend.Services.Question
             if (question == null) throw new NotFoundException("Question does not exist.");
 
             _repo.DeleteQuestion(question);
-            await _context.SaveChangesAsync();
+            await _repo.SaveChangesAsync();
             _cache.Remove(CacheKeys.QuestionsAll);
         }
 

@@ -14,6 +14,7 @@ namespace Backend.Repository.Question
         Task<List<QuestionListDTO>> GetAllAsync();
         void UpdateQuestion(Questions question);
         void DeleteQuestion(Questions question);
+        Task SaveChangesAsync();
 
     }
 }
