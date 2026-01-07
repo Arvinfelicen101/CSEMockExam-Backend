@@ -4,7 +4,6 @@ using Backend.Repository.Question;
 using Backend.Exceptions;
 using Microsoft.Extensions.Caching.Memory;
 using Backend.Services.Question.QuestionValidator;
-using Backend.Context;
 
 namespace Backend.Services.Question
 {
