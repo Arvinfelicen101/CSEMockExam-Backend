@@ -9,13 +9,11 @@ namespace Backend.Tests.Services.ChoicesTest
     public class ChoiceServiceTest
     {
         public readonly Mock<IChoicesRepository> _repoMock;
-        public readonly Mock<MyDbContext> _contextMock;
         public readonly ChoiceService _service;
 
         public ChoiceServiceTest()
         {
             _repoMock = new Mock<IChoicesRepository>();
-            _contextMock = new Mock<MyDbContext>();
 
             _service = new ChoiceService(
                 _repoMock.Object
@@ -80,12 +78,14 @@ namespace Backend.Tests.Services.ChoicesTest
             _repoMock.Setup(r => r.DeleteChoiceAsync(choice))
                      .Returns(Task.CompletedTask);
 
+            _repoMock.Setup(r => r.SaveChangesAsync());
+
             // Act
             await _service.DeleteChoiceAsync(1);
 
             // Assert
             _repoMock.Verify(r => r.DeleteChoiceAsync(choice), Times.Once);
-            _contextMock.Verify(c => c.SaveChangesAsync(default), Times.Once);
+            _repoMock.Verify(r => r.SaveChangesAsync(), Times.Once);
         }
     }
 }
