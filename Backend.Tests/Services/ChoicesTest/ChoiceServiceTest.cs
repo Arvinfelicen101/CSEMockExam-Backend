@@ -17,7 +17,7 @@ namespace Backend.Tests.Services.ChoicesTest
 
             _service = new ChoiceService(
                 _repoMock.Object
-                );
+                ); 
         }
 
         [Fact]
