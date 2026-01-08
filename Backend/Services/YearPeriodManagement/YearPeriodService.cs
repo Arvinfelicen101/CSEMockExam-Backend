@@ -11,7 +11,7 @@ public class YearPeriodService : IYearPeriodService
     private readonly IYearPeriodRepository _repository;
     private readonly ILogger<YearPeriodService> _logger;
 
-    public const string YearPeriodCacheKey = "YearPeriod:all";
+    private const string YearPeriodCacheKey = "YearPeriod:all";
 
     public YearPeriodService(IMemoryCache cache, IYearPeriodRepository repository, ILogger<YearPeriodService> logger)
     {
