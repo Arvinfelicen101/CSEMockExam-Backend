@@ -107,12 +107,16 @@ public static class ServiceHelper
             ["Clerical"] = 4,
             ["General"] = 5
         };
+        var questionCache = dtos.questionsCache.ToDictionary(q => q.QuestionName, q => q);
+        
         var questions = new List<Questions>();
         var choices = new List<Choices>();
 
         
         foreach (var rowData in list)
         {
+
+            if (questionCache.ContainsKey(rowData.RawQuestions)) continue; // skip iteration
             var rawParagraph = rowData.RawParagraph;
 
             Paragraphs? paragraph = null;
