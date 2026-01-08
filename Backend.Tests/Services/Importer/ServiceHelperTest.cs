@@ -2,15 +2,17 @@ using Backend.DTOs.Importer;
 using Backend.Models;
 using Backend.Models.enums;
 using Backend.Services.Importer;
+using Microsoft.Extensions.Logging.Abstractions;
+
 namespace Backend.Tests.Services.Importer;
 
 public class ServiceHelperTest
 {
-
     [Fact]
     public void ImportFkMapper_Creates_Questions_And_Choices_Correctly()
     {
         //arrange
+        var logger = NullLogger.Instance;
         var rawData = new List<RawDataDTO>()
         {
             new RawDataDTO()
@@ -76,8 +78,10 @@ public class ServiceHelperTest
             }
         };
         
+        
+        
         //Act
-        var result = ServiceHelper.ImportFkMapper(rawData, fkData);
+        var result = ServiceHelper.ImportFkMapper(rawData, fkData, logger);
         var correctChoice = result.Item2.First(c => c.IsCorrect);
         var wrongChoice = result.Item2.First(c => !c.IsCorrect);
 
@@ -86,6 +90,7 @@ public class ServiceHelperTest
 
         Assert.Equal("Rodrigo Duterte", wrongChoice.ChoiceText);
         Assert.False(wrongChoice.IsCorrect);
+        Assert.Equal(1, rawData.Count);
         //Assert
         Assert.NotEqual(2, result.Item1.Count);
         Assert.NotEqual(1, result.Item2.Count);
