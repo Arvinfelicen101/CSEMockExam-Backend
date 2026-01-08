@@ -34,8 +34,7 @@ namespace Backend.Tests.Services.Question
             _service = new QuestionService(
                 _repoMock.Object,
                 _memoryCache,
-                _validatorMock.Object,
-                _contextMock.Object
+                _validatorMock.Object
                 );
         }
 
