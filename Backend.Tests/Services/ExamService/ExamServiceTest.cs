@@ -44,6 +44,6 @@ public class ExamServiceTest
         await service.SubmitExamService(dto);
         //assert
         Assert.Equal(dto.First().UserId, "123");
-       123 Assert.NotEqual(dto.Select(u => u.QuestionId));
+       // 123 Assert.NotEqual(dto.Select(u => u.QuestionId));
     }
 }
