@@ -8,7 +8,7 @@ namespace Backend.Services.Question
         Task CreateQuestionAsync(QuestionCreateDTO question);
 
         Task <QuestionReadDTO> GetQuestionByIdAsync(int id);
-        Task<List<Questions>> GetAllAsync();
+        Task<List<QuestionListDTO>> GetAllAsync();
 
         Task UpdateQuestionAsync(int id, QuestionUpdateDTO question);
 
