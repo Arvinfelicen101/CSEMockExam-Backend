@@ -62,7 +62,13 @@ namespace Backend.Repository.Question
 
         public async Task<List<Questions>> GetAllAsync()
         {
-            return await _context.Question.ToListAsync();
+            return await _context.Question
+                .Include(p => p.ParagraphNavigation)
+                .Include(s => s.SubCategoryNavigation!)
+                .ThenInclude(s => s.categoryNavigation)
+                .Include(y => y.YearPeriodNavigation)
+                .Include(c => c.ChoicesCollection)
+                .ToListAsync();
         }
 
         public async Task<Questions?> FindQuestionByIdAsync(int id)
