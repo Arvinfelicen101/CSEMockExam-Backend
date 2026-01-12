@@ -64,16 +64,30 @@ namespace Backend.Services.Question
             return question;
         }
 
-        public async Task<List<Questions>> GetAllAsync()
+        public async Task<List<QuestionListDTO>> GetAllAsync()
         {
-            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<Questions>? cached)) return cached!;
+            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<QuestionListDTO>? cached)) return cached!;
             var result = await _repo.GetAllAsync();
+           
             _cache.Set(
                 CacheKeys.QuestionsAll,
                 result,
                 TimeSpan.FromMinutes(10)
                 );
             return result;      
+        }
+
+        public Task<List<QuestionListDTO>> MapQuestions(List<Questions> questions)
+        {
+            var mappedData = new List<QuestionListDTO>();
+            foreach (var q in questions)
+            {
+                mappedData.Add(new QuestionListDTO()
+                {
+                    QuestionName = q.QuestionName,
+                    P
+                });
+            }
         }
 
         public async Task UpdateQuestionAsync(int id, QuestionUpdateDTO question)
