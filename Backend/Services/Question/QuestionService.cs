@@ -68,16 +68,16 @@ namespace Backend.Services.Question
         {
             if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<QuestionListDTO>? cached)) return cached!;
             var result = await _repo.GetAllAsync();
-           
+            var mapped = MapQuestions(result);
             _cache.Set(
                 CacheKeys.QuestionsAll,
-                result,
+                mapped,
                 TimeSpan.FromMinutes(10)
                 );
-            return result;      
+            return mapped;      
         }
 
-        public Task<List<QuestionListDTO>> MapQuestions(List<Questions> questions)
+        public List<QuestionListDTO> MapQuestions(List<Questions> questions)
         {
             var mappedData = new List<QuestionListDTO>();
             foreach (var q in questions)
@@ -85,9 +85,20 @@ namespace Backend.Services.Question
                 mappedData.Add(new QuestionListDTO()
                 {
                     QuestionName = q.QuestionName,
-                    P
+                    categoryId = q.SubCategoryNavigation!.categoryNavigation!.Id,
+                    categoryName = q.SubCategoryNavigation.categoryNavigation.CategoryName.ToString(),
+                    SubCategoryId = q.SubCategoryId,
+                    SubCategoryName = q.SubCategoryNavigation.SubCategoryName,
+                    ParagraphId = q.ParagraphId,
+                    ParagraphTxt = q.ParagraphNavigation!.ParagraphText,
+                    YearPeriodId = q.YearPeriodId,
+                    year = q.YearPeriodNavigation!.Year,
+                    period = q.YearPeriodNavigation.Periods.ToString()
                 });
+                
             }
+
+            return mappedData;
         }
 
         public async Task UpdateQuestionAsync(int id, QuestionUpdateDTO question)
