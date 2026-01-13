@@ -37,7 +37,11 @@ namespace Backend.Repository.Question
             await _context.AddAsync(question);
         }    
            
-
+        public async Task<List<Questions>> GetAllAsync()
+        {
+            return await _context.Question.ToListAsync();
+        }
+        
         public async Task<QuestionReadDTO?> GetQuestionByIdAsync(int id)
         {
             return await _context.Question
@@ -60,16 +64,7 @@ namespace Backend.Repository.Question
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Questions>> GetAllAsync()
-        {
-            return await _context.Question
-                .Include(p => p.ParagraphNavigation)
-                .Include(s => s.SubCategoryNavigation!)
-                .ThenInclude(s => s.categoryNavigation)
-                .Include(y => y.YearPeriodNavigation)
-                .Include(c => c.ChoicesCollection)
-                .ToListAsync();
-        }
+        
 
         public async Task<Questions?> FindQuestionByIdAsync(int id)
         {

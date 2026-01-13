@@ -64,41 +64,16 @@ namespace Backend.Services.Question
             return question;
         }
 
-        public async Task<List<QuestionListDTO>> GetAllAsync()
+        public async Task<List<Questions>> GetAllAsync()
         {
-            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<QuestionListDTO>? cached)) return cached!;
+            if (_cache.TryGetValue(CacheKeys.QuestionsAll, out List<Questions>? cached)) return cached!;
             var result = await _repo.GetAllAsync();
-            var mapped = MapQuestions(result);
             _cache.Set(
                 CacheKeys.QuestionsAll,
-                mapped,
+                result,
                 TimeSpan.FromMinutes(10)
-                );
-            return mapped;      
-        }
-
-        public List<QuestionListDTO> MapQuestions(List<Questions> questions)
-        {
-            var mappedData = new List<QuestionListDTO>();
-            foreach (var q in questions)
-            {
-                mappedData.Add(new QuestionListDTO()
-                {
-                    QuestionName = q.QuestionName,
-                    categoryId = q.SubCategoryNavigation!.categoryNavigation!.Id,
-                    categoryName = q.SubCategoryNavigation.categoryNavigation.CategoryName.ToString(),
-                    SubCategoryId = q.SubCategoryId,
-                    SubCategoryName = q.SubCategoryNavigation.SubCategoryName,
-                    ParagraphId = q.ParagraphId,
-                    ParagraphTxt = q.ParagraphNavigation!.ParagraphText,
-                    YearPeriodId = q.YearPeriodId,
-                    year = q.YearPeriodNavigation!.Year,
-                    period = q.YearPeriodNavigation.Periods.ToString()
-                });
-                
-            }
-
-            return mappedData;
+            );
+            return result;      
         }
 
         public async Task UpdateQuestionAsync(int id, QuestionUpdateDTO question)
