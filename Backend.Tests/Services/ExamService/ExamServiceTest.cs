@@ -23,19 +23,22 @@ public class ExamServiceTest
             {
                 UserId = "123",
                 AnswerId = 1,
-                QuestionId = 1
+                QuestionId = 1,
+                duration = new TimeSpan(1, 0, 0)
             },
             new UserExamAnswerDTO()
             {
                 UserId = "123",
                 AnswerId = 2,
-                QuestionId = 2
+                QuestionId = 2,
+                duration = new TimeSpan(1, 0, 0)
             },
             new UserExamAnswerDTO()
             {
                 UserId = "123",
                 AnswerId = 3,
-                QuestionId = 3
+                QuestionId = 3,
+                duration = new TimeSpan(1, 0, 0)
             },
         };
 
