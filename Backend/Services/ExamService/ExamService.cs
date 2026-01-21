@@ -43,27 +43,37 @@ public class ExamService : IExamService
         return mapped;      
     }
 
-    public List<QuestionListDTO> MapQuestions(List<Questions> questions)
+    public List<ExamDTO> MapQuestions(List<Questions> questions)
     {
-        var mappedData = new List<QuestionListDTO>();
+        var mappedData = new List<ExamDTO>();
         foreach (var q in questions)
         {
-            mappedData.Add(new QuestionListDTO()
+            mappedData.Add(new ExamDTO()
             {
-                QuestionName = q.QuestionName,
-                categoryId = q.SubCategoryNavigation!.categoryNavigation!.Id,
-                categoryName = q.SubCategoryNavigation.categoryNavigation.CategoryName.ToString(),
-                SubCategoryId = q.SubCategoryId,
-                SubCategoryName = q.SubCategoryNavigation.SubCategoryName,
-                ParagraphId = q.ParagraphId,
-                ParagraphTxt = q.ParagraphNavigation!.ParagraphText,
-                YearPeriodId = q.YearPeriodId,
-                year = q.YearPeriodNavigation!.Year,
-                period = q.YearPeriodNavigation.Periods.ToString()
-            });
+                // QuestionName = q.QuestionName,
+                // // SubCategoryId = q.SubCategoryId,
+                // // SubCategoryName = q.SubCategoryNavigation!.SubCategoryName,
+                // ParagraphId = q.ParagraphId,
+                // ParagraphTxt = q.ParagraphNavigation!.ParagraphText,
+                // YearPeriodId = q.YearPeriodId,
+                // year = q.YearPeriodNavigation!.Year,
+                // period = q.YearPeriodNavigation.Periods.ToString()
                 
+                category = new Category()
+                {
+                    Id = q.SubCategoryNavigation!.CategoryId,
+                    CategoryName = q.SubCategoryNavigation!.categoryNavigation!.CategoryName
+                },
+                SubCategoryDto = new List<SubCategoryDTO>()
+                {
+                    new SubCategoryDTO()
+                    {
+                        
+                    }
+                }
+                
+            });
         }
-
         return mappedData;
     }
     
