@@ -11,10 +11,12 @@ namespace Backend.Repository.UserManagement
         {
             _manager = manager;
         }
-        public async Task CreateUserAsync(Users user, string password)
+        
+        public async Task<IdentityResult> CreateUserAsync(Users user, string password)
         {
-            await _manager.CreateAsync(user, password);
+            return await _manager.CreateAsync(user, password);
         }
+
         
         
     }

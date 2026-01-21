@@ -16,10 +16,18 @@ public class ExamController : ControllerBase
         _service = service;
     }
 
+    [HttpPost("submit-exam")]
     public async Task<IActionResult> Submit(List<UserExamAnswerDTO> dto)
     {
         await _service.SubmitExamService(dto);
         return Ok(new { message = "Examination submitted!" });
+    }
+
+    [HttpGet("get-exam-data")]
+    public async Task<IActionResult> StartExam()
+    {
+        var result = await _service.GetAllAsync();
+        return Ok(result);
     }
 }
 

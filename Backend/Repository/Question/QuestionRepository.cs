@@ -37,7 +37,11 @@ namespace Backend.Repository.Question
             await _context.AddAsync(question);
         }    
            
-
+        public async Task<List<Questions>> GetAllAsync()
+        {
+            return await _context.Question.ToListAsync();
+        }
+        
         public async Task<QuestionReadDTO?> GetQuestionByIdAsync(int id)
         {
             return await _context.Question
@@ -60,10 +64,7 @@ namespace Backend.Repository.Question
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<List<Questions>> GetAllAsync()
-        {
-            return await _context.Question.ToListAsync();
-        }
+        
 
         public async Task<Questions?> FindQuestionByIdAsync(int id)
         {

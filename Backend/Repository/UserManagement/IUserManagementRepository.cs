@@ -5,5 +5,5 @@ namespace Backend.Repository.UserManagement;
 
 public interface IUserManagementRepository
 {
-    Task CreateUserAsync(Users user, string password);
+    Task<IdentityResult> CreateUserAsync(Users user, string password);
 }
