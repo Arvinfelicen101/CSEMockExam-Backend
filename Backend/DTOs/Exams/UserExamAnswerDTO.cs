@@ -6,6 +6,5 @@ public class UserExamAnswerDTO
     public required int QuestionId { get; set; }
     public required int AnswerId { get; set; }
     public required TimeSpan duration { get; set; }
-    
     //add duration of exam
 }
