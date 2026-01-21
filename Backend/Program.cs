@@ -24,6 +24,8 @@ using Backend.Repository.YearPeriodManagement;
 using Backend.Services.ChoicesManagement;
 using Backend.Services.ParagraphManagement;
 using Backend.Services.YearPeriodManagement;
+using Backend.Repository.ExamRepository;
+using Backend.Services.ExamService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,7 @@ builder.Services.AddScoped<IChoicesRepository, ChoicesRepository>();
 builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
 builder.Services.AddScoped<IYearPeriodRepository, YearPeriodManagement>();
 builder.Services.AddScoped<IParagraphManagementRepository, ParagraphManagementRepository>();
+builder.Services.AddScoped<IExamRepository, ExamRepository>();
 
 //DI Services
 builder.Services.AddScoped<IQuestionValidator, QuestionValidator>();
@@ -51,6 +54,7 @@ builder.Services.AddScoped<IChoiceService, ChoiceService>();
 builder.Services.AddScoped<ISubCategoryService, SubCategoryService>();
 builder.Services.AddScoped<IYearPeriodService, YearPeriodService>();
 builder.Services.AddScoped<IParagraphManagementService, ParagraphManagementService>();
+builder.Services.AddScoped<IExamService, ExamService>();
 
 //DI Middleware
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -108,11 +112,7 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
     app.UseExceptionHandler();
 }
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
-
 
 app.Run();
