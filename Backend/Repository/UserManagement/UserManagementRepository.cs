@@ -21,6 +21,16 @@ namespace Backend.Repository.UserManagement
            return await _manager.FindByIdAsync(id);
         }
 
+        public async Task<Users?> FindUsernameAsync(string username)
+        {
+            return await _manager.FindByEmailAsync(username);
+        }
+
+        public async Task<Users?> FindEmailAsync(string email)
+        {
+            return await _manager.FindByEmailAsync(email);
+        }
+
         public async Task<List<Users>> GetAllAsync()
         {
             return _manager.Users.ToList();
@@ -35,6 +45,7 @@ namespace Backend.Repository.UserManagement
         {
             await _manager.DeleteAsync(user);
         }
-        
+
+       
     }
 }
