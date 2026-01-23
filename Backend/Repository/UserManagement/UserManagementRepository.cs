@@ -11,11 +11,30 @@ namespace Backend.Repository.UserManagement
         {
             _manager = manager;
         }
-        public async Task CreateUserAsync(Users user, string password)
+        public async Task<IdentityResult> CreateUserAsync(Users user, string password)
         {
-            await _manager.CreateAsync(user, password);
+            return await _manager.CreateAsync(user, password);
         }
-        
+
+        public async Task<Users?> FindByIdAsync(string id)
+        {
+           return await _manager.FindByIdAsync(id);
+        }
+
+        public async Task<List<Users>> GetAllAsync()
+        {
+            return _manager.Users.ToList();
+        }
+
+        public async Task UpdateAsync(Users user)
+        {
+            await _manager.UpdateAsync(user);
+        }
+
+        public async Task DeleteAsync(Users user)
+        {
+            await _manager.DeleteAsync(user);
+        }
         
     }
 }
