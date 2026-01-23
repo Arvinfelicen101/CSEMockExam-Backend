@@ -1,5 +1,6 @@
 ﻿using Backend.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Repository.UserManagement
 {
@@ -21,10 +22,6 @@ namespace Backend.Repository.UserManagement
            return await _manager.FindByIdAsync(id);
         }
 
-        public async Task<Users?> FindUsernameAsync(string username)
-        {
-            return await _manager.FindByEmailAsync(username);
-        }
 
         public async Task<Users?> FindEmailAsync(string email)
         {
@@ -33,17 +30,21 @@ namespace Backend.Repository.UserManagement
 
         public async Task<List<Users>> GetAllAsync()
         {
-            return _manager.Users.ToList();
+            return await _manager.Users
+                .AsNoTracking()
+                .ToListAsync();
         }
 
-        public async Task UpdateAsync(Users user)
+        public Task UpdateUser(Users user)
         {
-            await _manager.UpdateAsync(user);
+            _manager.UpdateAsync(user);
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(Users user)
+        public Task DeleteUser(Users user)
         {
-            await _manager.DeleteAsync(user);
+            _manager.DeleteAsync(user);
+            return Task.CompletedTask;
         }
 
        

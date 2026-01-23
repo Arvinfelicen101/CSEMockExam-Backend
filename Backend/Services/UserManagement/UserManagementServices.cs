@@ -3,59 +3,74 @@ using Backend.DTOs.UserManagement;
 using Backend.Exceptions;
 using Backend.Models;
 using Backend.Repository.UserManagement;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Backend.Services.UserManagement
 {
     public class UserManagementServices : IUserManagementServices
     {
         private readonly IUserManagementRepository _repository;
+        private readonly IMemoryCache _cache;
         
-        public UserManagementServices(IUserManagementRepository repository)
+        public UserManagementServices(IUserManagementRepository repository, IMemoryCache cache)
         {
             _repository = repository;
+            _cache = cache;
         }
 
-        public async Task CreateUserAsync(UserManagementCreateDTO dto)
+        public  async Task CreateUserAsync(UserManagementCreateDTO dto)
         {
-            if (dto.Password != dto.confirmPassword)
-                throw new BadRequestException("Password mismatched");
+            var emailExist = await _repository.FindEmailAsync(dto.email);
+            if (emailExist != null) 
+                throw new BadRequestException("Email already exists");
 
             var userInfo = new Users
             {
-                UserName = user.username,
-                Email = user.email,
-                FirstName = user.firstName,
-                MiddleName = user.middleName,
-                LastName = user.lastName
+                Email = dto.email,
+                FirstName = dto.FirstName,
+                MiddleName = dto.MiddleName,
+                LastName = dto.LastName,
+
             };
 
-            await _repository.CreateUserAsync(userInfo, user.password);
+            await _repository.CreateUserAsync(userInfo, dto.Password);
+
         }
 
-        public Task CreateUserAsync(UserManagementCreateDTO dto)
+        public async Task<List<Users>> GetUsersAsync()
         {
-            throw new NotImplementedException();
+            if (_cache.TryGetValue(CacheKeys.UsersAll, out List<Users>? cached))
+                return cached!;
+
+            var result = await _repository.GetAllAsync();
+
+            _cache.Set(CacheKeys.UsersAll, result);
+
+            return result;
         }
 
-        public Task DeleteUserAsync(string id)
+        public async Task UpdateUserAsync(string id, UserManagementUpdateDTO dto)
         {
-            throw new NotImplementedException();
+            var user = await _repository.FindByIdAsync(id);
+            if (user == null) throw new NotFoundException("user does not exist.");
+
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+            user.MiddleName = dto.MiddleName;
+           
+            await _repository.UpdateUser(user);
+
         }
 
-        public Task<UserManagementReadDTO> GetUserByIdAsync(string id)
+        public async Task DeleteUserAsync(string id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.FindByIdAsync(id);
+            if (user == null) throw new NotFoundException("User does not exist.");
+
+            await _repository.DeleteUser(user);
         }
 
-        public Task<List<UserManagementListDTO>> GetUsersAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateUserAsync(string id, UserManagementUpdateDTO dto)
-        {
-            throw new NotImplementedException();
-        }
+     
     }
 }
 
