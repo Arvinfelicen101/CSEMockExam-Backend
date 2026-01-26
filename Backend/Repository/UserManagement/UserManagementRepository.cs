@@ -35,18 +35,17 @@ namespace Backend.Repository.UserManagement
                 .ToListAsync();
         }
 
-        public Task UpdateUser(Users user)
+        public Task<IdentityResult> UpdateUser(Users user)
         {
-            _manager.UpdateAsync(user);
-            return Task.CompletedTask;
+           return _manager.UpdateAsync(user);
+           
         }
 
-        public Task DeleteUser(Users user)
+        public Task<IdentityResult> DeleteUser(Users user)
         {
-            _manager.DeleteAsync(user);
-            return Task.CompletedTask;
+            return _manager.DeleteAsync(user);
+            
         }
 
-       
     }
 }

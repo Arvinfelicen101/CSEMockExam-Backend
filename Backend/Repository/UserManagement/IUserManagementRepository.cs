@@ -9,6 +9,7 @@ public interface IUserManagementRepository
     Task<Users?> FindByIdAsync(string id);
     Task<Users?> FindEmailAsync(string email);
     Task<List<Users>> GetAllAsync();
-    Task UpdateUser(Users user);
-    Task DeleteUser(Users user);
+    Task<IdentityResult> UpdateUser(Users user);
+    Task<IdentityResult> DeleteUser(Users user);
+ 
 }

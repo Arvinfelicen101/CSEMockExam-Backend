@@ -2,6 +2,6 @@
 {
     public static class CacheKeys
     {
-        public const string SubCategoryAll = "SubCategories:All";
+        public const string SubCategoryAll = "subCategories:all";
     }
 }

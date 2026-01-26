@@ -34,15 +34,23 @@ namespace Backend.Services.UserManagement
             };
 
             await _repository.CreateUserAsync(userInfo, dto.Password);
+            _cache.Remove(CacheKeys.UsersAll);
 
         }
 
-        public async Task<List<Users>> GetUsersAsync()
+        public async Task<List<UserManagementListDTO>> GetUsersAsync()
         {
-            if (_cache.TryGetValue(CacheKeys.UsersAll, out List<Users>? cached))
+            if (_cache.TryGetValue(CacheKeys.UsersAll, out List<UserManagementListDTO>? cached))
                 return cached!;
 
-            var result = await _repository.GetAllAsync();
+            var users = await _repository.GetAllAsync();
+
+            var result = users.Select(u => new UserManagementListDTO
+            {
+                Id = u.Id,
+                Email = u.Email!,
+                FullName = $"{u.FirstName} {u.LastName}"
+            }).ToList();
 
             _cache.Set(CacheKeys.UsersAll, result);
 
@@ -59,6 +67,7 @@ namespace Backend.Services.UserManagement
             user.MiddleName = dto.MiddleName;
            
             await _repository.UpdateUser(user);
+            _cache.Remove(CacheKeys.UsersAll);
 
         }
 
@@ -68,6 +77,7 @@ namespace Backend.Services.UserManagement
             if (user == null) throw new NotFoundException("User does not exist.");
 
             await _repository.DeleteUser(user);
+            _cache.Remove(CacheKeys.UsersAll);
         }
 
      

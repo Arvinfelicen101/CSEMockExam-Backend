@@ -71,7 +71,7 @@ namespace Backend.Services.SubCategory
         public async Task UpdateSubCategoryAsync(int id, SubCategoryUpdateDTO dto)
         {
             var subCategory = await _repo.FindByIdAsync(id);
-            if (subCategory == null) throw new Exception("SubCategory does not exist");
+            if (subCategory == null) throw new NotFoundException("SubCategory does not exist");
 
             if (!await _repo.CategoryExistAsync(dto.CategoryId))
                 throw new NotFoundException("Category does not exist");

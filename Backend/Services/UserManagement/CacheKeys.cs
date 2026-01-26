@@ -1,6 +1,7 @@
 ﻿namespace Backend.Services.UserManagement
 {
-    public class CacheKeys
+    public static class CacheKeys
     {
+        public const string UsersAll = "users:all";
     }
 }
