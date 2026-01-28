@@ -12,6 +12,11 @@ namespace Backend.Repository.UserManagement
         {
             _manager = manager;
         }
+
+        public async Task<IdentityResult> RegisterUserAsync(Users user, string password)
+        {
+            return await _manager.CreateAsync(user, password);
+        }
         public async Task<IdentityResult> CreateUserAsync(Users user, string password)
         {
             return await _manager.CreateAsync(user, password);
@@ -19,9 +24,8 @@ namespace Backend.Repository.UserManagement
 
         public async Task<Users?> FindByIdAsync(string id)
         {
-           return await _manager.FindByIdAsync(id);
+            return await _manager.FindByIdAsync(id);
         }
-
 
         public async Task<Users?> FindEmailAsync(string email)
         {
@@ -47,5 +51,6 @@ namespace Backend.Repository.UserManagement
             
         }
 
+        
     }
 }

@@ -7,6 +7,7 @@ namespace Backend.Services.UserManagement;
 
 public interface IUserManagementServices
 {
+    Task RegisterUserAsync(RegisterDTO user);
     Task CreateUserAsync(UserManagementCreateDTO dto);
     Task<List<UserManagementListDTO>> GetUsersAsync();
     Task UpdateUserAsync(string id, UserManagementUpdateDTO dto);

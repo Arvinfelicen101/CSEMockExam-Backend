@@ -60,7 +60,6 @@ builder.Services.AddScoped<IExamService, ExamService>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
-builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -82,29 +81,77 @@ builder.Services.AddIdentity<Users, IdentityRole>()
     .AddDefaultTokenProviders();
 
 var jwtConfig = builder.Configuration.GetSection("JwtConfig");
-var key = jwtConfig["key"] ?? throw new InvalidOperationException("JWT Key is missing");
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+var key = jwtConfig["Key"] ?? throw new InvalidOperationException("JWT Key is missing");
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.Events = new JwtBearerEvents
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        OnAuthenticationFailed = context =>
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidIssuer = jwtConfig["Issuer"],
-            ValidAudience = jwtConfig["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
-        };
-    });
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            logger.LogError("JWT AUTH FAILED: {Message}", context.Exception.Message);
+            return Task.CompletedTask;
+        }
+    };
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtConfig["Issuer"],
+        ValidAudience = jwtConfig["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(jwtConfig["Key"]!)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+
+//        options.Events = new JwtBearerEvents
+//        {
+//            OnAuthenticationFailed = context =>
+//            {
+//                Console.WriteLine("JWT AUTH FAILED: " + context.Exception.Message);
+//                return Task.CompletedTask;
+//            }
+//        };
+
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+
+//            ValidIssuer = jwtConfig["Issuer"],
+//            ValidAudience = jwtConfig["Audience"],
+
+//            IssuerSigningKey = new SymmetricSecurityKey(
+//            Encoding.UTF8.GetBytes(jwtConfig["Key"]!)),
+
+//            ClockSkew = TimeSpan.Zero
+//        };
+//    });
+
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 var app = builder.Build();
 
-app.MapControllers();
-
-app.MapOpenApi();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -113,6 +160,13 @@ if (app.Environment.IsDevelopment())
     app.UseExceptionHandler();
 }
 app.UseHttpsRedirection();
+
+app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllers();
+app.MapOpenApi();
 
 app.Run();

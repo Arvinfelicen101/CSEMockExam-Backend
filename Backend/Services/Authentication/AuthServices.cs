@@ -64,7 +64,7 @@ namespace Backend.Services.Authentication
               issuer: _config["JwtConfig:Issuer"],
               audience: _config["JwtConfig:Audience"],
               claims: claims,
-              expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["JwtConfig:ExpireMinutes"])),
+              expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(_config["JwtConfig:ExpireInMinutes"])),
               signingCredentials: creds
              );
 

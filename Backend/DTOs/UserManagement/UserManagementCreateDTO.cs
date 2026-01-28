@@ -11,7 +11,6 @@ namespace Backend.DTOs.UserManagement
         [Required(ErrorMessage = "Last Name is required.")]
         public string? LastName { get; set; }
 
-        [Required(ErrorMessage = "Middle Name is required.")]
         public string? MiddleName { get; set; }
 
         [Required]

@@ -18,6 +18,23 @@ namespace Backend.Services.UserManagement
             _cache = cache;
         }
 
+
+        public async Task RegisterUserAsync(RegisterDTO user)
+        {
+            if (user.password != user.confirmPassword)
+                throw new BadRequestException("Password mismatched");
+
+            var userInfo = new Users
+            {
+                UserName = user.username,
+                Email = user.email,
+                FirstName = user.firstName,
+                MiddleName = user.middleName,
+                LastName = user.lastName
+            };
+
+            await _repository.RegisterUserAsync(userInfo, user.password);
+        }
         public  async Task CreateUserAsync(UserManagementCreateDTO dto)
         {
             var emailExist = await _repository.FindEmailAsync(dto.email);
@@ -30,6 +47,7 @@ namespace Backend.Services.UserManagement
                 FirstName = dto.FirstName,
                 MiddleName = dto.MiddleName,
                 LastName = dto.LastName,
+                UserName = dto.email
 
             };
 
@@ -37,6 +55,7 @@ namespace Backend.Services.UserManagement
             _cache.Remove(CacheKeys.UsersAll);
 
         }
+
 
         public async Task<List<UserManagementListDTO>> GetUsersAsync()
         {
@@ -80,7 +99,7 @@ namespace Backend.Services.UserManagement
             _cache.Remove(CacheKeys.UsersAll);
         }
 
-     
+      
     }
 }
 
