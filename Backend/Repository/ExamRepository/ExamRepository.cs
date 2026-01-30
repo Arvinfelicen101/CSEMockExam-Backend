@@ -48,6 +48,46 @@ public class ExamRepository : IExamRepository
             .ToListAsync<CategoryDTO>();
     }
 
+    public async Task<List<CategoryDTO>> FetchFilteredData(FilterDTO? dto )
+    {
+        var query = _context.Category.AsNoTracking().AsSplitQuery().AsQueryable();
+
+        if (dto != null)
+        {
+            if (dto.CategoryFilter != null && dto.CategoryFilter.Any())
+            {
+                query = query.Where(c => dto.CategoryFilter.Contains(c.CategoryName.ToString()));
+            }
+            
+            if (dto.SubCategoryFilter != null && dto.SubCategoryFilter.Any())
+            {
+                query = query.Where(c => c.SubCategoriesCollection
+                    .Any(sc => dto.SubCategoryFilter.Contains(sc.SubCategoryName)));
+            }
+        }
+        
+        var result = await query.Select(c => new CategoryDTO(
+                c.Id,
+                c.CategoryName.ToString(),
+                c.SubCategoriesCollection.Select(sc => new SubCategoryDTO(
+                        sc.Id,
+                        sc.SubCategoryName,
+                        sc.QuestionsCollection.Select(q => new QuestionsDTO(
+                                q.Id,
+                                q.QuestionName,
+                                q.ChoicesCollection.Select(ch => new ChoicesDTO(
+                                    ch.Id,
+                                    ch.ChoiceText
+                                )).ToList()
+                            ))
+                            .ToList()
+                    ))
+                    .ToList()
+            ))
+            .ToListAsync<CategoryDTO>();
+        return result;
+    }
+    
     public async Task SubmitExamAsync(List<UserAnswers> answer)
     {
         await _context.UserAnswer.AddRangeAsync(answer);
