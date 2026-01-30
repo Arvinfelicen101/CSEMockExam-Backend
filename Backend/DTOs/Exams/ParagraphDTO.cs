@@ -1,3 +1,3 @@
 namespace Backend.DTOs.Exams;
 
-public record ParagraphDTO();
+public record ParagraphDTO(int ParagraphId, string ParagraphText, List<QuestionsDTO> QuestionsText);
