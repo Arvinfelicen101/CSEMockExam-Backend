@@ -38,7 +38,7 @@ public partial class MyDbContext : IdentityDbContext<Users, IdentityRole, string
         SubCategoriesSeeder.Seed(modelBuilder);
 
         modelBuilder.Entity<Category>()
-            .HasMany(e => e.SubCategories)
+            .HasMany(e => e.SubCategoriesCollection)
             .WithOne(e => e.categoryNavigation)
             .HasForeignKey(e => e.CategoryId)
             .IsRequired();

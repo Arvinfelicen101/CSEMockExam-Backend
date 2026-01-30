@@ -5,4 +5,6 @@ namespace Backend.Services.ExamService;
 public interface IExamService
 {
     Task SubmitExamService(List<UserExamAnswerDTO> exam);
+    Task<List<CategoryDTO>> GetAllAsync();
+    Task<List<CategoryDTO>> GetFilteredQuestions(FilterDTO data);
 }

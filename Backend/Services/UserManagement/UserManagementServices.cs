@@ -28,10 +28,14 @@ namespace Backend.Services.UserManagement
                 LastName = user.lastName
             };
 
-            await _repository.CreateUserAsync(userInfo, user.password);
+            var result = await _repository.CreateUserAsync(userInfo, user.password);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                throw new BadRequestException(errors);
+            }
         }
-
-
     }
 }
 

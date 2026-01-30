@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using Backend.DTOs.Exams;
 using Backend.Services.ExamService;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +15,25 @@ public class ExamController : ControllerBase
         _service = service;
     }
 
+    [HttpPost("submit-exam")]
     public async Task<IActionResult> Submit(List<UserExamAnswerDTO> dto)
     {
         await _service.SubmitExamService(dto);
         return Ok(new { message = "Examination submitted!" });
+    }
+
+    [HttpGet("get-exam-data")]
+    public async Task<IActionResult> StartExam()
+    {
+        var result = await _service.GetAllAsync();
+        return Ok(result);
+    }
+
+    [HttpGet("filter")]
+    public async Task<IActionResult> GetFilteredData(FilterDTO dto)
+    {
+        var result = await _service.GetFilteredQuestions(dto);
+        return Ok(result);
     }
 }
 

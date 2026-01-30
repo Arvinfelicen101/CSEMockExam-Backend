@@ -33,4 +33,15 @@ public class ExamService : IExamService
 
         return mappedData;
     }
+    
+    public async Task<List<CategoryDTO>> GetAllAsync()
+    {
+        return await _repository.GetAllAsync();
+    }
+
+    public async Task<List<CategoryDTO>> GetFilteredQuestions(FilterDTO data)
+    {
+        return await _repository.FetchFilteredData(data);
+    }
+    
 }
