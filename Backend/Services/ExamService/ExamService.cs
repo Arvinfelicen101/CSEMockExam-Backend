@@ -35,48 +35,9 @@ public class ExamService : IExamService
         return mappedData;
     }
     
-    public async Task<List<QuestionListDTO>> GetAllAsync()
+    public async Task<List<CategoryDTO>> GetAllAsync()
     {
-           
-        var result = await _repository.GetAllAsync();
-        var mapped = MapQuestions(result);
-        return mapped;      
-    }
-
-    public List<ExamDTO> MapQuestions(List<Questions> questions)
-    {
-        var mappedData = new List<ExamDTO>();
-        foreach (var q in questions)
-        {
-            mappedData.Add(new ExamDTO()
-            {
-                // QuestionName = q.QuestionName,
-                // // SubCategoryId = q.SubCategoryId,
-                // // SubCategoryName = q.SubCategoryNavigation!.SubCategoryName,
-                // ParagraphId = q.ParagraphId,
-                // ParagraphTxt = q.ParagraphNavigation!.ParagraphText,
-                // YearPeriodId = q.YearPeriodId,
-                // year = q.YearPeriodNavigation!.Year,
-                // period = q.YearPeriodNavigation.Periods.ToString()
-                
-                category = new Category()
-                {
-                    Id = q.SubCategoryNavigation!.CategoryId,
-                    CategoryName = q.SubCategoryNavigation!.categoryNavigation!.CategoryName
-                },
-                SubCategoryDto = new List<SubCategoryDTO>()
-                {
-                    new SubCategoryDTO()
-                    {
-                        
-                    }
-                }
-                
-            });
-        }
-        return mappedData;
+        return await _repository.GetAllAsync();
     }
     
-    //create check exam answer results here
-    // public async Task
 }
