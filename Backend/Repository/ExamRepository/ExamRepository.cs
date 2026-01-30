@@ -25,6 +25,14 @@ public class ExamRepository : IExamRepository
                 c.SubCategoriesCollection.Select(sc => new SubCategoryDTO(
                     sc.Id,
                     sc.SubCategoryName,
+                    // sc.QuestionsCollection.Select(p => new ParagraphDTO(
+                    //     p.ParagraphNavigation!.Id,
+                    //     p.ParagraphNavigation.ParagraphText,
+                    //     p.Q
+                    //     
+                    //     
+                    //     
+                    //     )).ToList(),
                     sc.QuestionsCollection.Select(q => new QuestionsDTO(
                         q.Id,
                         q.QuestionName,
