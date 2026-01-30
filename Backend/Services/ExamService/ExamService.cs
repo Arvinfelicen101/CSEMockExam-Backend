@@ -1,6 +1,5 @@
 using Backend.Repository.ExamRepository;
 using Backend.DTOs.Exams;
-using Backend.DTOs.Question;
 using Backend.Models;
 namespace Backend.Services.ExamService;
 
@@ -38,6 +37,11 @@ public class ExamService : IExamService
     public async Task<List<CategoryDTO>> GetAllAsync()
     {
         return await _repository.GetAllAsync();
+    }
+
+    public async Task<List<CategoryDTO>> GetFilteredQuestions(FilterDTO data)
+    {
+        return await _repository.FetchFilteredData(data);
     }
     
 }
