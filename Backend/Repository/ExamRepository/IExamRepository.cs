@@ -1,9 +1,9 @@
 using Backend.Models;
-
+using Backend.DTOs.Exams;
 namespace Backend.Repository.ExamRepository;
 
 public interface IExamRepository
 {
     Task SubmitExamAsync(List<UserAnswers> answer);
-    Task<List<Questions>> GetAllAsync();
+    Task<List<CategoryDTO>> GetAllAsync();
 }
