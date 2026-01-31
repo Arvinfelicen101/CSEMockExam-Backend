@@ -29,7 +29,6 @@ using Backend.Services.ExamService;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Add services to the container.
 builder.Services.AddMemoryCache();
 
