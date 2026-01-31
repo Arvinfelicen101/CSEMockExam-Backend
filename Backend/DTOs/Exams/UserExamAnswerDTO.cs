@@ -2,9 +2,8 @@ namespace Backend.DTOs.Exams;
 
 public class UserExamAnswerDTO
 {
-    public required string UserId { get; set; }
-    public required int QuestionId { get; set; }
-    public required int AnswerId { get; set; }
+    // CHANGE TO LIST OF ANSWERS FIELD AND A DURATION FIELD INSTEAD
+    public required List<AnswersListDTO> UserAnswer { get; set; }
     public required TimeSpan duration { get; set; }
     //add duration of exam
 }
