@@ -16,7 +16,7 @@ public class ExamController : ControllerBase
     }
 
     [HttpPost("submit-exam")]
-    public async Task<IActionResult> Submit(List<UserExamAnswerDTO> dto)
+    public async Task<IActionResult> Submit(UserExamAnswerDTO dto)
     {
         await _service.SubmitExamService(dto);
         return Ok(new { message = "Examination submitted!" });
@@ -29,7 +29,7 @@ public class ExamController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("filter")]
+    [HttpPost("filter")]
     public async Task<IActionResult> GetFilteredData(FilterDTO dto)
     {
         var result = await _service.GetFilteredQuestions(dto);
