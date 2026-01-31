@@ -1,7 +1,7 @@
 namespace Backend.DTOs.Exams;
 
-public record FilterDTO(
-    List<string>? CategoryFilter,
-    List<string>? SubCategoryFilter,
-    int QuestionNumber
-    );
+public class FilterDTO
+{
+    public List<string>? CategoryFilter { get; init; }
+    public List<string>? SubCategoryFilter { get; init; }
+}
