@@ -92,4 +92,21 @@ public class ExamRepository : IExamRepository
     {
         await _context.UserAnswer.AddRangeAsync(answer);
     }
+
+    public async Task<int> CheckAnswersAsync(List<UserAnswers> answer)
+    {
+        var answerIds = answer.Select(a => a.Id).ToList();
+
+        var correctCount = await _context.UserAnswer
+            .Where(ua => answerIds.Contains(ua.Id) &&
+                         ua.ChoicesNavigation!.IsCorrect) // directly check if the chosen answer is correct
+            .CountAsync();
+
+        return correctCount;
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
 }
