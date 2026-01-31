@@ -12,16 +12,18 @@ public class ExamService : IExamService
         _repository = repository;
     }
 
-    public async Task SubmitExamService(List<UserExamAnswerDTO> exam)
+    public async Task SubmitExamService(UserExamAnswerDTO exam)
     {
         var mapped = MapResults(exam);
         await _repository.SubmitExamAsync(mapped);
+        await _repository.CheckAnswersAsync(mapped);
+        await _repository.SaveChangesAsync();
     }
 
-    private List<UserAnswers> MapResults(List<UserExamAnswerDTO> dtos)
+    private List<UserAnswers> MapResults(UserExamAnswerDTO dtos)
     {
         var mappedData = new List<UserAnswers>();
-        foreach (var answer in dtos)
+        foreach (var answer in dtos.UserAnswer)
         {
             mappedData.Add(new UserAnswers()
             {
@@ -33,6 +35,7 @@ public class ExamService : IExamService
 
         return mappedData;
     }
+    
     
     public async Task<List<CategoryDTO>> GetAllAsync()
     {
