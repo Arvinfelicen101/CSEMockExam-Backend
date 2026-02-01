@@ -72,7 +72,7 @@ namespace Backend.Services.Question
                 CacheKeys.QuestionsAll,
                 result,
                 TimeSpan.FromMinutes(10)
-                );
+            );
             return result;      
         }
 

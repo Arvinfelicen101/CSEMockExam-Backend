@@ -34,8 +34,7 @@ namespace Backend.Controllers.Question
             return Ok(question);
         }
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet("get-questions")]
         public async Task<IActionResult> GetAllQuestions()
         {
             var questions = await _service.GetAllAsync();
