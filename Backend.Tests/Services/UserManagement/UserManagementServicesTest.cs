@@ -49,4 +49,44 @@ public class UserManagementServicesTest
             );
         }
 
+    [Fact]
+    public async Task GetUsersAsync_WhenNotCached_ShouldFetchFromRepositoryAndCache()
+    {
+        // Arrange
+        var users = new List<Users>
+    {
+        new Users
+        {
+            Id = "1",
+            Email = "user@gmail.com",
+            FirstName = "Jane",
+            LastName = "Doe"
+        }
+    };
+
+        _repoMock
+            .Setup(r => r.GetAllAsync())
+            .ReturnsAsync(users);
+
+        _cacheMock
+            .Setup(c => c.TryGetValue(CacheKeys.UsersAll, out It.Ref<object>.IsAny))
+            .Returns(false);
+
+        _cacheMock
+            .Setup(c => c.CreateEntry(CacheKeys.UsersAll))
+            .Returns(Mock.Of<ICacheEntry>);
+
+        // Act
+        var result = await _service.GetUsersAsync();
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal("Jane Doe", result[0].FullName);
+
+        _repoMock.Verify(r => r.GetAllAsync(), Times.Once);
+        _cacheMock.Verify(c => c.CreateEntry(CacheKeys.UsersAll), Times.Once);
+    }
+
+
+
 }
