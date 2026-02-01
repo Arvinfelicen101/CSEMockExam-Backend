@@ -34,7 +34,7 @@ namespace Backend.Controllers.UserManagement
         {
            var users = await _service.GetUsersAsync();
             return Ok(users);
-        }
+        }   
 
         [HttpPut("({id:Guid})")]
         [Authorize]
