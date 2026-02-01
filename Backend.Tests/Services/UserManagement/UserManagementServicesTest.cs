@@ -1,8 +1,10 @@
 using Backend.DTOs.Auth;
+using Backend.DTOs.UserManagement;
 using Backend.Exceptions;
 using Backend.Models;
 using Backend.Repository.UserManagement;
 using Backend.Services.UserManagement;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 
 
@@ -10,55 +12,41 @@ namespace Backend.Tests.Services.UserManagement;
 
 public class UserManagementServicesTest
 {
+    private readonly Mock<IUserManagementRepository> _repoMock;
+    private readonly Mock<IMemoryCache> _cacheMock;
+    private readonly UserManagementServices _service;
+
+    public UserManagementServicesTest()
+    {
+        _repoMock = new Mock<IUserManagementRepository>();
+        _cacheMock = new Mock<IMemoryCache>();
+
+        _service = new UserManagementServices(
+            _repoMock.Object,
+            _cacheMock.Object
+
+         );
+    }
 
     [Fact]
-    public async Task CreateUserService_PasswordMismatch_Returns404()
+    public async Task CreateUserAsync_WhenEmailExists_ShouldThrowBadRequest()
     {
         // Arrange
-        var repoMock = new Mock<IUserManagementRepository>();
+        _repoMock
+            .Setup(r => r.FindEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync(new Users());
 
-        var service = new UserManagementServices(repoMock.Object);
-
-        var user = new RegisterDTO()
+        var dto = new UserManagementCreateDTO
         {
-            username = "francis123",
-            email = "floresfrancisjoseph@gmail.com",
-            firstName = "Francis",
-            middleName = "Pajarit",
-            lastName = "Flores",
-            password = "Francis123!",
-            confirmPassword = "Francis123?"
+            email = "existing@gmail.com",
+            Password = "Password123!"
         };
-        
-        // Assert + act
-        await Assert.ThrowsAsync<BadRequestException>(() => service.CreateUserAsync(user));
-        Assert.NotSame(user.password, user.confirmPassword);
 
-        repoMock.Verify(r => r.CreateUserAsync(It.IsAny<Users>(), It.IsAny<string>()), Times.Never);
-    }
+        // Act & Assert
 
-    public async Task CreateUserService_UserCreated_Success()
-    {
-        //arrange
-        var repoMock = new Mock<IUserManagementRepository>();
-        var service = new UserManagementServices(repoMock.Object);
-        
-        var user = new RegisterDTO()
-        {
-            username = "francis123",
-            email = "floresfrancisjoseph@gmail.com",
-            firstName = "Francis",
-            middleName = "Pajarit",
-            lastName = "Flores",
-            password = "Francis123!",
-            confirmPassword = "Francis123!"
-        };
-        
-        //assert + act
-        var exception = await Record.ExceptionAsync(() => service.CreateUserAsync(user));
-        Assert.Null(exception);
-
-    }
-    
+        await Assert.ThrowsAsync<BadRequestException>(
+                () => _service.CreateUserAsync(dto)
+            );
+        }
 
 }
