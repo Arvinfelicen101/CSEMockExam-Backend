@@ -88,5 +88,32 @@ public class UserManagementServicesTest
     }
 
 
+    [Fact]
+    public async Task UpdateUsersAsync_WhenUserExists_ShouldUpdateAndClearCache()
+    {
+        var user = new Users
+        {
+            Id = "1",
+            FirstName = "Old",
+            LastName = "Name"
+        };
+
+        _repoMock.Setup(r => r.FindByIdAsync("1")).ReturnsAsync(user);
+
+        var dto = new UserManagementUpdateDTO
+        {
+            FirstName = "New",
+            LastName = "Name",
+            MiddleName = "M"
+        };
+
+        // Act
+        await _service.UpdateUserAsync("1", dto);
+
+        // Assert
+        Assert.Equal("New", user.FirstName);
+        _repoMock.Verify(r => r.UpdateUser(user), Times.Once);
+        _cacheMock.Verify(c => c.Remove(CacheKeys.UsersAll), Times.Once);
+    }
 
 }
