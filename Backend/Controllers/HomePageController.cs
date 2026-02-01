@@ -28,7 +28,7 @@ namespace Backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterDTO user)
         {
-            await _userManagement.CreateUserAsync(user);
+            await _userManagement.RegisterUserAsync(user);
             return Ok(new { message = "User created successfully" });
         }
 

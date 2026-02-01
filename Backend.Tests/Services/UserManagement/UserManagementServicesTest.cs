@@ -1,8 +1,10 @@
 using Backend.DTOs.Auth;
+using Backend.DTOs.UserManagement;
 using Backend.Exceptions;
 using Backend.Models;
 using Backend.Repository.UserManagement;
 using Backend.Services.UserManagement;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 
 
@@ -10,55 +12,123 @@ namespace Backend.Tests.Services.UserManagement;
 
 public class UserManagementServicesTest
 {
+    private readonly Mock<IUserManagementRepository> _repoMock;
+    private readonly Mock<IMemoryCache> _cacheMock;
+    private readonly UserManagementServices _service;
+
+    public UserManagementServicesTest()
+    {
+        _repoMock = new Mock<IUserManagementRepository>();
+        _cacheMock = new Mock<IMemoryCache>();
+
+        _service = new UserManagementServices(
+            _repoMock.Object,
+            _cacheMock.Object
+
+         );
+    }
 
     [Fact]
-    public async Task CreateUserService_PasswordMismatch_Returns404()
+    public async Task CreateUserAsync_WhenEmailExists_ShouldThrowBadRequest()
     {
         // Arrange
-        var repoMock = new Mock<IUserManagementRepository>();
+        _repoMock
+            .Setup(r => r.FindEmailAsync(It.IsAny<string>()))
+            .ReturnsAsync(new Users());
 
-        var service = new UserManagementServices(repoMock.Object);
-
-        var user = new RegisterDTO()
+        var dto = new UserManagementCreateDTO
         {
-            username = "francis123",
-            email = "floresfrancisjoseph@gmail.com",
-            firstName = "Francis",
-            middleName = "Pajarit",
-            lastName = "Flores",
-            password = "Francis123!",
-            confirmPassword = "Francis123?"
+            email = "existing@gmail.com",
+            Password = "Password123!"
         };
-        
-        // Assert + act
-        await Assert.ThrowsAsync<BadRequestException>(() => service.CreateUserAsync(user));
-        Assert.NotSame(user.password, user.confirmPassword);
 
-        repoMock.Verify(r => r.CreateUserAsync(It.IsAny<Users>(), It.IsAny<string>()), Times.Never);
-    }
+        // Act & Assert
 
-    public async Task CreateUserService_UserCreated_Success()
+        await Assert.ThrowsAsync<BadRequestException>(
+                () => _service.CreateUserAsync(dto)
+            );
+        }
+
+    [Fact]
+    public async Task GetUsersAsync_WhenNotCached_ShouldFetchFromRepositoryAndCache()
     {
-        //arrange
-        var repoMock = new Mock<IUserManagementRepository>();
-        var service = new UserManagementServices(repoMock.Object);
-        
-        var user = new RegisterDTO()
+        // Arrange
+        var users = new List<Users>
+    {
+        new Users
         {
-            username = "francis123",
-            email = "floresfrancisjoseph@gmail.com",
-            firstName = "Francis",
-            middleName = "Pajarit",
-            lastName = "Flores",
-            password = "Francis123!",
-            confirmPassword = "Francis123!"
-        };
-        
-        //assert + act
-        var exception = await Record.ExceptionAsync(() => service.CreateUserAsync(user));
-        Assert.Null(exception);
+            Id = "1",
+            Email = "user@gmail.com",
+            FirstName = "Jane",
+            LastName = "Doe"
+        }
+    };
 
+        _repoMock
+            .Setup(r => r.GetAllAsync())
+            .ReturnsAsync(users);
+
+        _cacheMock
+            .Setup(c => c.TryGetValue(CacheKeys.UsersAll, out It.Ref<object>.IsAny))
+            .Returns(false);
+
+        _cacheMock
+            .Setup(c => c.CreateEntry(CacheKeys.UsersAll))
+            .Returns(Mock.Of<ICacheEntry>);
+
+        // Act
+        var result = await _service.GetUsersAsync();
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal("Jane Doe", result[0].FullName);
+
+        _repoMock.Verify(r => r.GetAllAsync(), Times.Once);
+        _cacheMock.Verify(c => c.CreateEntry(CacheKeys.UsersAll), Times.Once);
     }
-    
+
+
+    [Fact]
+    public async Task UpdateUsersAsync_WhenUserExists_ShouldUpdateAndClearCache()
+    {
+        var user = new Users
+        {
+            Id = "1",
+            FirstName = "Old",
+            LastName = "Name"
+        };
+
+        _repoMock.Setup(r => r.FindByIdAsync("1")).ReturnsAsync(user);
+
+        var dto = new UserManagementUpdateDTO
+        {
+            FirstName = "New",
+            LastName = "Name",
+            MiddleName = "M"
+        };
+
+        // Act
+        await _service.UpdateUserAsync("1", dto);
+
+        // Assert
+        Assert.Equal("New", user.FirstName);
+        _repoMock.Verify(r => r.UpdateUser(user), Times.Once);
+        _cacheMock.Verify(c => c.Remove(CacheKeys.UsersAll), Times.Once);
+    }
+
+    [Fact]
+    public async Task DeleteUserAsync_WhenUserExists_ShouldDeleteAndClearCache()
+    {
+        // Arrange
+        var user = new Users { Id = "1" };
+        _repoMock.Setup(r => r.FindByIdAsync("1")).ReturnsAsync(user);
+
+        // Act
+        await _service.DeleteUserAsync("1");
+
+        // Assert
+        _repoMock.Verify(r => r.DeleteUser(user), Times.Once);
+        _cacheMock.Verify(c => c.Remove(CacheKeys.UsersAll), Times.Once);
+    }
 
 }
