@@ -116,4 +116,19 @@ public class UserManagementServicesTest
         _cacheMock.Verify(c => c.Remove(CacheKeys.UsersAll), Times.Once);
     }
 
+    [Fact]
+    public async Task DeleteUserAsync_WhenUserExists_ShouldDeleteAndClearCache()
+    {
+        // Arrange
+        var user = new Users { Id = "1" };
+        _repoMock.Setup(r => r.FindByIdAsync("1")).ReturnsAsync(user);
+
+        // Act
+        await _service.DeleteUserAsync("1");
+
+        // Assert
+        _repoMock.Verify(r => r.DeleteUser(user), Times.Once);
+        _cacheMock.Verify(c => c.Remove(CacheKeys.UsersAll), Times.Once);
+    }
+
 }
